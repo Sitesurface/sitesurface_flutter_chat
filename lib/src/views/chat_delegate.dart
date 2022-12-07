@@ -29,5 +29,5 @@ abstract class ChatDelegate<T> {
 
   Future<File?> getCameraImage();
   Future<File?> getGalleryImage();
-  Future<SfcLatLng?> getCurrentLocation();
+  Future<SfcLatLng?> getCurrentLocation(BuildContext context);
 }

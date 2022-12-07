@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:bubble/bubble.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../sitesurface_flutter_chat.dart';
+import 'chat_bubble/chat_bubble.dart';
 
 class MessageItem extends StatelessWidget {
   final int index;
@@ -227,7 +226,7 @@ class _LocationWidget extends StatelessWidget {
         width: 200,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(image: CachedNetworkImageProvider(url))),
+            image: DecorationImage(image: NetworkImage(url))),
         margin: const EdgeInsets.only(bottom: 10.0),
       ),
     );
@@ -281,16 +280,16 @@ class _ImageWidget extends StatelessWidget {
                       ),
                     ));
               },
-              child: CachedNetworkImage(
-                placeholder: (context, url) => const SizedBox(
+              child: Image.network(
+                message.content,
+                loadingBuilder: (_, __, ___) => const SizedBox(
                   width: 200.0,
                   height: 200.0,
                   child: Center(
                     child: CircularProgressIndicator.adaptive(),
                   ),
                 ),
-                errorWidget: (context, url, error) => Container(),
-                imageUrl: message.content,
+                errorBuilder: (_, __, ___) => Container(),
                 width: 200.0,
                 height: 200.0,
                 fit: BoxFit.cover,

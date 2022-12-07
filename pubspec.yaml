@@ -8,8 +8,6 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  bubble: ^1.2.1
-  cached_network_image: ^3.2.3
   cloud_firestore: ^4.1.0
   firebase_messaging: ^14.1.2
   firebase_storage: ^11.0.6

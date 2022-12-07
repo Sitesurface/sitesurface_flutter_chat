@@ -221,7 +221,7 @@ class _ChatScreenState extends State<_ChatScreen> {
                   children: [
                     CircleIconButton(
                       color: Colors.lightGreen,
-                      onTap: _onLocationPressed,
+                      onTap: () => _onLocationPressed(context),
                       iconData: Icons.map,
                     ),
                     const SizedBox(
@@ -280,8 +280,8 @@ class _ChatScreenState extends State<_ChatScreen> {
         notificationTitle: widget.delegate.notificationTitle(group, user!));
   }
 
-  _onLocationPressed() async {
-    var latlng = await widget.delegate.getCurrentLocation();
+  _onLocationPressed(BuildContext context) async {
+    var latlng = await widget.delegate.getCurrentLocation(context);
     if (latlng == null) return;
 
     // adding local location
