@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 import 'package:sitesurface_flutter_chat/src/utils/try_parse.dart';
+
+import '../enums/message_type.dart';
 
 class ChatListWidget extends StatefulWidget {
   final ChatDelegate delegate;
@@ -81,13 +84,6 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                         clipBehavior: Clip.hardEdge,
                                         child: Image.network(
                                           user.profilePic ?? "",
-                                          loadingBuilder: (_, __, ___) =>
-                                              const SizedBox(
-                                            width: 40.0,
-                                            height: 40.0,
-                                            child: CircularProgressIndicator
-                                                .adaptive(),
-                                          ),
                                           errorBuilder: (_, __, ___) =>
                                               Container(),
                                           width: 40.0,
@@ -117,25 +113,54 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                   ),
                                 ),
                                 title: Text(user.name ?? ""),
-                                subtitle:
-                                    Text(group?.lastMessage?.content ?? ""),
-                                trailing: (group?.unreadMessageCount ?? 0) > 0
-                                    ? SizedBox(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: colorScheme.primary),
-                                          padding: const EdgeInsets.all(6),
-                                          child: Text(
-                                            "${group?.unreadMessageCount}",
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600),
+                                subtitle: Text(
+                                  () {
+                                    if (group?.lastMessage == null) return "";
+                                    switch (group!.lastMessage!.type) {
+                                      case MessageType.text:
+                                        return group.lastMessage?.content ?? "";
+                                      case MessageType.image:
+                                        return "Shared image";
+                                      case MessageType.location:
+                                        return "Shared location";
+                                    }
+                                  }(),
+                                  maxLines: 2,
+                                ),
+                                trailing: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    if (group?.lastMessage != null)
+                                      Text(
+                                        DateFormat("yMd").format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                            int.parse(
+                                                group?.lastMessage?.timestamp ??
+                                                    ""),
                                           ),
                                         ),
-                                      )
-                                    : const SizedBox(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                                    if ((group?.unreadMessageCount ?? 0) > 0)
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: colorScheme.primary),
+                                        padding: const EdgeInsets.all(6),
+                                        child: Text(
+                                          "${group?.unreadMessageCount}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                  ],
+                                ),
                               )
                             : widget.builder!(context, user, group!, index),
                       ),

@@ -242,14 +242,7 @@ class ChatController {
     try {
       if (_userId == null) return;
       String currTime = DateTime.now().millisecondsSinceEpoch.toString();
-      await Future.delayed(const Duration(seconds: 3));
       if (message.content.trim().isEmpty) return;
-      if (message.type == MessageType.image) {
-        var imageHelper = ImageHelper();
-        var url = await imageHelper.uploadImageFile(File(message.content));
-        if (url == null) return;
-        message = message.copyWith(content: url);
-      }
       var unreadMessageCount = group.unreadMessageCount;
       unreadMessageCount += 1;
       group = group.copyWith(

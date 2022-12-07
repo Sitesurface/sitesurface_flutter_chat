@@ -67,7 +67,7 @@ class MessageItem extends StatelessWidget {
 
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.only(bottom: 10.0),
+      margin: const EdgeInsets.only(bottom: 5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -96,9 +96,17 @@ class MessageItem extends StatelessWidget {
                   showNip: showNib(index),
                 );
               case MessageType.image:
-                return _ImageWidget(message: message);
+                return _ImageWidget(
+                  message: message,
+                  isSender: currUserId == message.idFrom,
+                  showNip: showNib(index),
+                );
               case MessageType.location:
-                return _LocationWidget(message: message);
+                return _LocationWidget(
+                  message: message,
+                  isSender: currUserId == message.idFrom,
+                  showNip: showNib(index),
+                );
             }
           }(),
         ],
@@ -202,34 +210,95 @@ class _TextMessageWidget extends StatelessWidget {
 
 class _LocationWidget extends StatelessWidget {
   final Message message;
-  const _LocationWidget({Key? key, required this.message}) : super(key: key);
+  final bool isSender;
+  final bool showNip;
+  const _LocationWidget(
+      {Key? key,
+      required this.message,
+      required this.isSender,
+      required this.showNip})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var textTheme = Theme.of(context).textTheme;
     var mapUri = Uri(
       scheme: 'https',
       host: 'maps.googleapis.com',
       path: 'maps/api/staticmap',
       queryParameters: {
         "center": message.content,
-        "zoom": "15",
-        "size": "200x200",
+        "zoom": "18",
+        "size": "400x400",
         "markers": "size:mid|color:0xFF7717|${message.content}",
         "key": "AIzaSyBD-EvQTcV3m73xrrWbDjUiEubDeSIIX-o"
       },
     );
     var url = mapUri.toString();
-    return InkWell(
-      onTap: () {
-        openMap(message.content);
-      },
-      child: Container(
-        height: 200,
-        width: 200,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(image: NetworkImage(url))),
-        margin: const EdgeInsets.only(bottom: 10.0),
+    return Bubble(
+      showNip: true,
+      nip: showNip
+          ? isSender
+              ? BubbleNip.rightTop
+              : BubbleNip.leftTop
+          : null,
+      padding: const BubbleEdges.all(5),
+      margin: const BubbleEdges.only(top: 5),
+      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+      color: isSender ? const Color(0xffe9ffd9) : Colors.white,
+      child: InkWell(
+        onTap: () {
+          openMap(message.content);
+        },
+        child: Column(
+          children: [
+            Container(
+              height: width * 0.4,
+              width: width * 0.6,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                      image: NetworkImage(url), fit: BoxFit.cover)),
+              margin: const EdgeInsets.only(bottom: 10.0),
+            ),
+            SizedBox(
+              width: width * 0.6,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Shared location",
+                        style: textTheme.bodyMedium
+                            ?.copyWith(color: Colors.black)),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          DateFormat("hh:mm aa").format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  int.parse(message.timestamp))),
+                          style: const TextStyle(
+                              fontSize: 10.0, fontStyle: FontStyle.italic),
+                        ),
+                        if (isSender)
+                          const Padding(
+                            padding: EdgeInsets.only(left: 3),
+                            child: Icon(
+                              Icons.check,
+                              size: 12,
+                              color: Colors.blueAccent,
+                            ),
+                          )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -246,75 +315,117 @@ class _LocationWidget extends StatelessWidget {
 }
 
 class _ImageWidget extends StatelessWidget {
+  final bool isSender;
+  final bool showNip;
   final Message message;
-  const _ImageWidget({required this.message});
+  const _ImageWidget(
+      {required this.message, required this.isSender, required this.showNip});
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      borderRadius: BorderRadius.circular(8.0),
-      clipBehavior: Clip.hardEdge,
-      child: isLink(message.content)
-          ? InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Scaffold(
-                        backgroundColor: Colors.white,
-                        appBar: AppBar(
-                          elevation: 0,
-                          leading: IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.black,
+    var width = MediaQuery.of(context).size.width;
+    return Bubble(
+      showNip: true,
+      nip: showNip
+          ? isSender
+              ? BubbleNip.rightTop
+              : BubbleNip.leftTop
+          : null,
+      padding: const BubbleEdges.all(5),
+      margin: const BubbleEdges.only(top: 5),
+      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+      color: isSender ? const Color(0xffe9ffd9) : Colors.white,
+      child: Stack(
+        children: [
+          Material(
+            borderRadius: BorderRadius.circular(5.0),
+            clipBehavior: Clip.hardEdge,
+            child: isLink(message.content)
+                ? InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                              backgroundColor: Colors.white,
+                              appBar: AppBar(
+                                elevation: 0,
+                                leading: IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              body: Center(
+                                child: InteractiveViewer(
+                                  child: Image.network(message.content),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        body: Center(
-                          child: InteractiveViewer(
-                            child: Image.network(message.content),
-                          ),
-                        ),
-                      ),
-                    ));
-              },
-              child: Image.network(
-                message.content,
-                loadingBuilder: (_, __, ___) => const SizedBox(
-                  width: 200.0,
-                  height: 200.0,
-                  child: Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-                ),
-                errorBuilder: (_, __, ___) => Container(),
-                width: 200.0,
-                height: 200.0,
-                fit: BoxFit.cover,
-              ),
-            )
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: Stack(
-                  children: [
-                    Image.file(
-                      File(message.content),
+                          ));
+                    },
+                    child: Image.network(
+                      message.content,
+                      errorBuilder: (_, __, ___) => Container(),
+                      width: width * 0.6,
+                      height: width * 0.8,
                       fit: BoxFit.cover,
-                      height: 200,
-                      width: 200,
                     ),
-                    const Center(child: CircularProgressIndicator.adaptive())
-                  ],
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: SizedBox(
+                      width: width * 0.6,
+                      height: width * 0.8,
+                      child: Stack(
+                        children: [
+                          Image.file(
+                            File(message.content),
+                            fit: BoxFit.cover,
+                            width: width * 0.6,
+                            height: width * 0.8,
+                          ),
+                          const Center(
+                              child: CircularProgressIndicator.adaptive())
+                        ],
+                      ),
+                    ),
+                  ),
+          ),
+          Positioned(
+            right: 4,
+            bottom: 4,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  DateFormat("hh:mm aa").format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(message.timestamp))),
+                  style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 10.0,
+                      fontStyle: FontStyle.italic),
                 ),
-              ),
+                if (isSender)
+                  const Padding(
+                    padding: EdgeInsets.only(left: 3),
+                    child: Icon(
+                      Icons.check,
+                      size: 12,
+                      color: Colors.blueAccent,
+                    ),
+                  )
+              ],
             ),
+          )
+        ],
+      ),
     );
   }
 

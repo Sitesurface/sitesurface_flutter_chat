@@ -162,7 +162,7 @@ class _ChatScreenState extends State<_ChatScreen> {
         idFrom: _chatController.userId ?? "",
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
-    messageNotifier.value = [...messageNotifier.value, message];
+    messageNotifier.value = [message, ...messageNotifier.value];
     _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     _chatController.sendMessage(
@@ -233,17 +233,20 @@ class _ChatScreenState extends State<_ChatScreen> {
   }
 
   _onCameraPressed() async {
+    var navigator = Navigator.of(context);
     var image = await widget.delegate.getCameraImage();
+    navigator.pop();
     if (image == null) return;
 
     // adding local image while the image uploads
     String currTime = DateTime.now().millisecondsSinceEpoch.toString();
     var message = Message(
+        type: MessageType.image,
         content: image.path,
         idFrom: _chatController.userId ?? "",
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
-    messageNotifier.value = [...messageNotifier.value, message];
+    messageNotifier.value = [message, ...messageNotifier.value];
     _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     var url = await widget.delegate.uploadImage(image);
@@ -255,17 +258,20 @@ class _ChatScreenState extends State<_ChatScreen> {
   }
 
   _onGalleryPressed() async {
+    var navigator = Navigator.of(context);
     var image = await widget.delegate.getGalleryImage();
+    navigator.pop();
     if (image == null) return;
 
     // adding local image while the image uploads
     String currTime = DateTime.now().millisecondsSinceEpoch.toString();
     var message = Message(
+        type: MessageType.image,
         content: image.path,
         idFrom: _chatController.userId ?? "",
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
-    messageNotifier.value = [...messageNotifier.value, message];
+    messageNotifier.value = [message, ...messageNotifier.value];
     _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     var url = await widget.delegate.uploadImage(image);
@@ -277,17 +283,21 @@ class _ChatScreenState extends State<_ChatScreen> {
   }
 
   _onLocationPressed(BuildContext context) async {
+    var navigator = Navigator.of(context);
     var latlng = await widget.delegate.getCurrentLocation(context);
+    navigator.pop();
+
     if (latlng == null) return;
 
     // adding local location
     String currTime = DateTime.now().millisecondsSinceEpoch.toString();
     var message = Message(
+        type: MessageType.location,
         content: "${latlng.latitude},${latlng.longitude}",
         idFrom: _chatController.userId ?? "",
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
-    messageNotifier.value = [...messageNotifier.value, message];
+    messageNotifier.value = [message, ...messageNotifier.value];
     _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     _chatController.sendMessage(
