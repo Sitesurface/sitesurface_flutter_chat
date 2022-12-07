@@ -38,6 +38,8 @@ class ChatController {
   Future<void> init(
       {required String userId,
       String? fcmServerKey,
+      String? name,
+      String? profilePic,
       Map<String, dynamic>? data}) async {
     this.fcmServerKey = fcmServerKey;
     _userId = userId;
@@ -55,6 +57,8 @@ class ChatController {
         currentTokens.removeAt(0);
       }
       user = user.copyWith(
+        name: name,
+        profilePic: profilePic,
         data: data,
         lastSeen: DateTime.now().microsecondsSinceEpoch.toString(),
         fcmTokens: currentTokens,
@@ -68,6 +72,8 @@ class ChatController {
       var user = User(
           data: data,
           id: _userId!,
+          name: name,
+          profilePic: profilePic,
           isActive: true,
           lastSeen: DateTime.now().microsecondsSinceEpoch.toString(),
           createdAt: DateTime.now().microsecondsSinceEpoch.toString(),

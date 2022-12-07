@@ -8,14 +8,8 @@ import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as ln;
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
-import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
-import 'package:sitesurface_flutter_chat/src/models/group/group.dart';
-import 'package:sitesurface_flutter_chat/src/views/chat_delegate.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
-import 'package:sitesurface_flutter_chat/src/models/user/user.dart';
 import 'dart:math' as math;
-
-import 'package:sitesurface_flutter_chat/src/widget/message_item.dart';
 
 import 'circle_icon_button.dart';
 part '../views/chat.dart';
@@ -24,6 +18,8 @@ class ChatHandler extends StatefulWidget {
   final Widget child;
   final ChatDelegate chatDelegate;
   final String userId;
+  final String? name;
+  final String? profilePic;
   final Map<String, dynamic>? data;
 
   const ChatHandler({
@@ -32,6 +28,8 @@ class ChatHandler extends StatefulWidget {
     required this.userId,
     required this.chatDelegate,
     required this.data,
+    this.name,
+    this.profilePic,
   }) : super(key: key);
 
   @override

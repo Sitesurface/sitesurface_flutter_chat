@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 import 'package:sitesurface_flutter_chat/src/utils/try_parse.dart';
 
 class ChatListWidget extends StatefulWidget {
   final ChatDelegate delegate;
-  const ChatListWidget(
-      {super.key, required this.builder, required this.delegate});
-  final Widget Function(BuildContext context, User user, Group group, int index)
-      builder;
+  const ChatListWidget({super.key, this.builder, required this.delegate});
+  final Widget Function(
+      BuildContext context, User user, Group group, int index)? builder;
   @override
   State<ChatListWidget> createState() => _ChatListWidgetState();
 }
@@ -19,6 +19,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: _chatController.getChats(limit: 10),
       builder: (context, snapshot) {
@@ -67,7 +68,71 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                       },
                       child: AbsorbPointer(
                         absorbing: true,
-                        child: widget.builder(context, user, group!, index),
+                        child: widget.builder == null
+                            ? ListTile(
+                                leading: Stack(
+                                  children: [
+                                    Material(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      clipBehavior: Clip.hardEdge,
+                                      child: Image.network(
+                                        user.profilePic ?? "",
+                                        loadingBuilder: (_, __, ___) =>
+                                            const SizedBox(
+                                          width: 40.0,
+                                          height: 40.0,
+                                          child: Center(
+                                            child: CircularProgressIndicator
+                                                .adaptive(),
+                                          ),
+                                        ),
+                                        errorBuilder: (_, __, ___) =>
+                                            Container(),
+                                        width: 40.0,
+                                        height: 40.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          height: 10,
+                                          width: 10,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: () {
+                                                if (user.isActive) {
+                                                  return Colors.green;
+                                                } else {
+                                                  return Colors.red;
+                                                }
+                                              }()),
+                                          margin:
+                                              const EdgeInsets.only(top: 15),
+                                        ))
+                                  ],
+                                ),
+                                title: Text(user.name ?? ""),
+                                subtitle:
+                                    Text(group?.lastMessage?.content ?? ""),
+                                trailing: (group?.unreadMessageCount ?? 0) > 0
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: colorScheme.primary),
+                                        padding: const EdgeInsets.all(6),
+                                        child: Text(
+                                          "${group?.unreadMessageCount}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                              )
+                            : widget.builder!(context, user, group!, index),
                       ),
                     );
                   });
