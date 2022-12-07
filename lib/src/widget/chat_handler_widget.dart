@@ -75,7 +75,11 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _chatController.init(userId: widget.userId, data: widget.data);
+    _chatController.init(
+        userId: widget.userId,
+        data: widget.data,
+        name: widget.name,
+        profilePic: widget.profilePic);
     initMain();
     WidgetsBinding.instance.addObserver(this);
     child = widget.child;

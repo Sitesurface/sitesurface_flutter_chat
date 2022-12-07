@@ -70,64 +70,69 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                         absorbing: true,
                         child: widget.builder == null
                             ? ListTile(
-                                leading: Stack(
-                                  children: [
-                                    Material(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      clipBehavior: Clip.hardEdge,
-                                      child: Image.network(
-                                        user.profilePic ?? "",
-                                        loadingBuilder: (_, __, ___) =>
-                                            const SizedBox(
-                                          width: 40.0,
-                                          height: 40.0,
-                                          child: Center(
+                                leading: SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: Stack(
+                                    children: [
+                                      Material(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                        clipBehavior: Clip.hardEdge,
+                                        child: Image.network(
+                                          user.profilePic ?? "",
+                                          loadingBuilder: (_, __, ___) =>
+                                              const SizedBox(
+                                            width: 40.0,
+                                            height: 40.0,
                                             child: CircularProgressIndicator
                                                 .adaptive(),
                                           ),
+                                          errorBuilder: (_, __, ___) =>
+                                              Container(),
+                                          width: 40.0,
+                                          height: 40.0,
+                                          fit: BoxFit.cover,
                                         ),
-                                        errorBuilder: (_, __, ___) =>
-                                            Container(),
-                                        width: 40.0,
-                                        height: 40.0,
-                                        fit: BoxFit.cover,
                                       ),
-                                    ),
-                                    Positioned(
-                                        right: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                          height: 10,
-                                          width: 10,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: () {
-                                                if (user.isActive) {
-                                                  return Colors.green;
-                                                } else {
-                                                  return Colors.red;
-                                                }
-                                              }()),
-                                          margin:
-                                              const EdgeInsets.only(top: 15),
-                                        ))
-                                  ],
+                                      Positioned(
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Container(
+                                            height: 10,
+                                            width: 10,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: () {
+                                                  if (user.isActive) {
+                                                    return Colors.green;
+                                                  } else {
+                                                    return Colors.red;
+                                                  }
+                                                }()),
+                                            margin:
+                                                const EdgeInsets.only(top: 15),
+                                          ))
+                                    ],
+                                  ),
                                 ),
                                 title: Text(user.name ?? ""),
                                 subtitle:
                                     Text(group?.lastMessage?.content ?? ""),
                                 trailing: (group?.unreadMessageCount ?? 0) > 0
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: colorScheme.primary),
-                                        padding: const EdgeInsets.all(6),
-                                        child: Text(
-                                          "${group?.unreadMessageCount}",
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600),
+                                    ? SizedBox(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: colorScheme.primary),
+                                          padding: const EdgeInsets.all(6),
+                                          child: Text(
+                                            "${group?.unreadMessageCount}",
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600),
+                                          ),
                                         ),
                                       )
                                     : const SizedBox(),
