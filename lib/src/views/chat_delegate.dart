@@ -5,13 +5,18 @@ import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/helpers/image_helper.dart';
 
+import '../widget/chat_bottom_widget.dart';
+import '../widget/circle_icon_button.dart';
 import '../widget/message_item.dart';
 
 abstract class ChatDelegate<T> {
   Group? group;
 
   /// notification title which is sent to user
-  String notificationTitle(Group group, User user);
+  String notificationTitle(Group group, User user) {
+    return user.name ?? "";
+  }
+
   Future<String?> uploadImage(File file) async {
     var imageHelper = ImageHelper();
     return await imageHelper.uploadImageFile(file);
@@ -81,6 +86,19 @@ abstract class ChatDelegate<T> {
                 ),
               ],
             ),
+    );
+  }
+
+  Widget chatBottomBuilder(
+      void Function(String text)? onSendTapped,
+      void Function()? onCameraTapped,
+      void Function()? onGalleryTapped,
+      void Function(BuildContext context)? onLocationTapped) {
+    return ChatBottomWidget(
+      onSendTapped: onSendTapped,
+      onCameraTapped: onCameraTapped,
+      onGalleryTapped: onGalleryTapped,
+      onLocationTapped: onLocationTapped,
     );
   }
 

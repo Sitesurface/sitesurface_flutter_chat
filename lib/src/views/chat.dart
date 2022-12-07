@@ -25,13 +25,12 @@ class _ChatScreenState extends State<_ChatScreen> {
   final _chatController = ChatController.instance;
   late Group group;
   User? user;
-  String? chatfield;
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _textEditingController = TextEditingController();
-  final ValueNotifier<String?> textNotifier = ValueNotifier<String?>(null);
+
   final ValueNotifier<List<Message>> messageNotifier =
       ValueNotifier<List<Message>>([]);
   late final StreamSubscription _messageSubscription;
+  final ValueNotifier<bool> showGoToBottom = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -44,12 +43,20 @@ class _ChatScreenState extends State<_ChatScreen> {
       }
       messageNotifier.value = tempMessageList;
     });
+    _scrollController.addListener(() {
+      var height = MediaQuery.of(context).size.height;
+      if (_scrollController.offset >= height) {
+        showGoToBottom.value = true;
+      } else {
+        showGoToBottom.value = false;
+      }
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
+    var brightness = Theme.of(context).brightness;
     return Scaffold(
       body: Column(
         children: [
@@ -77,88 +84,61 @@ class _ChatScreenState extends State<_ChatScreen> {
             child: ValueListenableBuilder<List<Message>>(
               valueListenable: messageNotifier,
               builder: (context, value, _) {
-                return ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  padding: const EdgeInsets.all(10),
-                  itemCount: value.length,
-                  reverse: true,
-                  controller: _scrollController,
-                  itemBuilder: (context, index) => widget.delegate
-                      .chatMessageBuilder(context, index, value[index],
-                          _chatController.userId!, value),
+                return Stack(
+                  children: [
+                    ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(10),
+                      itemCount: value.length,
+                      reverse: true,
+                      controller: _scrollController,
+                      itemBuilder: (context, index) => widget.delegate
+                          .chatMessageBuilder(context, index, value[index],
+                              _chatController.userId!, value),
+                    ),
+                    Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: ValueListenableBuilder(
+                          valueListenable: showGoToBottom,
+                          builder: (context, value, _) {
+                            if (value) {
+                              return IconButton(
+                                  onPressed: () {
+                                    _scrollController.jumpTo(0.0);
+                                  },
+                                  icon: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                        color: brightness == Brightness.dark
+                                            ? Colors.grey.withOpacity(0.85)
+                                            : Colors.white.withOpacity(0.85),
+                                        shape: BoxShape.circle),
+                                    child: const Icon(
+                                        Icons.keyboard_double_arrow_down),
+                                  ));
+                            } else {
+                              return const SizedBox();
+                            }
+                          },
+                        ))
+                  ],
                 );
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 50,
-              child: Row(
-                children: [
-                  Flexible(
-                      child: TextField(
-                    controller: _textEditingController,
-                    onChanged: (value) {
-                      textNotifier.value = value;
-                    },
-                    decoration: const InputDecoration(
-                      hintText: "Message",
-                      fillColor: Colors.white,
-                      filled: true,
-                      isDense: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                      ),
-                    ),
-                  )),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  ValueListenableBuilder<String?>(
-                      valueListenable: textNotifier,
-                      builder: (context, value, _) {
-                        if (value == null || value.trim().isEmpty) {
-                          return CircleIconButton(
-                            onTap: _onAttachmentTapped,
-                            icon: Transform.rotate(
-                                angle: 50 * math.pi / 180,
-                                child: const Icon(
-                                  Icons.attachment,
-                                  color: Colors.white,
-                                )),
-                          );
-                        } else {
-                          return CircleIconButton(
-                            onTap: _onSendTapped,
-                            iconData: Icons.send,
-                          );
-                        }
-                      })
-                ],
-              ),
-            ),
-          ),
+          widget.delegate.chatBottomBuilder(_onSendTapped, _onCameraPressed,
+              _onGalleryPressed, _onLocationPressed),
         ],
       ),
     );
   }
 
-  void _onSendTapped() {
+  void _onSendTapped(String text) {
     if (user == null) return;
-    _textEditingController.clear();
     String currTime = DateTime.now().millisecondsSinceEpoch.toString();
     var message = Message(
-        content: textNotifier.value ?? "",
+        content: text,
         idFrom: _chatController.userId ?? "",
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
@@ -169,67 +149,6 @@ class _ChatScreenState extends State<_ChatScreen> {
         message: message,
         group: group,
         notificationTitle: widget.delegate.notificationTitle(group, user!));
-    textNotifier.value = null;
-  }
-
-  void _onAttachmentTapped() {
-    showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        isScrollControlled: true,
-        builder: (context) {
-          return Container(
-            height: 130,
-            margin: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(16)),
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    CircleIconButton(
-                      color: Colors.redAccent,
-                      onTap: _onCameraPressed,
-                      iconData: Icons.camera,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Text("Camera"),
-                  ],
-                ),
-                Column(
-                  children: [
-                    CircleIconButton(
-                      color: Colors.purpleAccent,
-                      onTap: _onGalleryPressed,
-                      iconData: Icons.photo,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Text("Gallery"),
-                  ],
-                ),
-                Column(
-                  children: [
-                    CircleIconButton(
-                      color: Colors.lightGreen,
-                      onTap: () => _onLocationPressed(context),
-                      iconData: Icons.map,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Text("Location"),
-                  ],
-                )
-              ],
-            ),
-          );
-        });
   }
 
   _onCameraPressed() async {
@@ -311,8 +230,6 @@ class _ChatScreenState extends State<_ChatScreen> {
     _chatController.isChatScreen = false;
     _messageSubscription.cancel();
     _scrollController.dispose();
-    _textEditingController.dispose();
-    textNotifier.dispose();
     messageNotifier.dispose();
     super.dispose();
   }

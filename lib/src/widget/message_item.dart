@@ -85,7 +85,7 @@ class MessageItem extends StatelessWidget {
                               DateTime.fromMillisecondsSinceEpoch(
                                   int.parse(message.timestamp))),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 11.0)),
+                  style: const TextStyle(fontSize: 11.0, color: Colors.black)),
             ),
           () {
             switch (message.type) {

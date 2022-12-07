@@ -10,7 +10,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
-import 'dart:math' as math;
 
 import 'circle_icon_button.dart';
 part '../views/chat.dart';
