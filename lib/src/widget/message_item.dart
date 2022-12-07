@@ -131,6 +131,7 @@ class _TextMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
+    var textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment:
           isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -160,6 +161,7 @@ class _TextMessageWidget extends StatelessWidget {
                 children: [
                   Text(
                     message.content,
+                    style: textTheme.bodyMedium?.copyWith(color: Colors.black),
                   ),
                   const SizedBox(
                     width: 10,

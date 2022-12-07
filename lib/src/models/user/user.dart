@@ -14,6 +14,8 @@ class User with _$User {
       required final String id,
       @Default(false) final bool isActive,
       final String? typingGroup,
+      final String? name,
+      final String? profilePic,
       final Map<String, dynamic>? data}) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

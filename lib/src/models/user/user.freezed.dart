@@ -26,6 +26,8 @@ mixin _$User {
   String get id => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   String? get typingGroup => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  String? get profilePic => throw _privateConstructorUsedError;
   Map<String, dynamic>? get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,6 +47,8 @@ abstract class $UserCopyWith<$Res> {
       String id,
       bool isActive,
       String? typingGroup,
+      String? name,
+      String? profilePic,
       Map<String, dynamic>? data});
 }
 
@@ -67,6 +71,8 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? id = null,
     Object? isActive = null,
     Object? typingGroup = freezed,
+    Object? name = freezed,
+    Object? profilePic = freezed,
     Object? data = freezed,
   }) {
     return _then(_value.copyWith(
@@ -94,6 +100,14 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.typingGroup
           : typingGroup // ignore: cast_nullable_to_non_nullable
               as String?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      profilePic: freezed == profilePic
+          ? _value.profilePic
+          : profilePic // ignore: cast_nullable_to_non_nullable
+              as String?,
       data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
@@ -115,6 +129,8 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       String id,
       bool isActive,
       String? typingGroup,
+      String? name,
+      String? profilePic,
       Map<String, dynamic>? data});
 }
 
@@ -133,6 +149,8 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     Object? id = null,
     Object? isActive = null,
     Object? typingGroup = freezed,
+    Object? name = freezed,
+    Object? profilePic = freezed,
     Object? data = freezed,
   }) {
     return _then(_$_User(
@@ -160,6 +178,14 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
           ? _value.typingGroup
           : typingGroup // ignore: cast_nullable_to_non_nullable
               as String?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      profilePic: freezed == profilePic
+          ? _value.profilePic
+          : profilePic // ignore: cast_nullable_to_non_nullable
+              as String?,
       data: freezed == data
           ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
@@ -178,6 +204,8 @@ class _$_User implements _User {
       required this.id,
       this.isActive = false,
       this.typingGroup,
+      this.name,
+      this.profilePic,
       final Map<String, dynamic>? data})
       : _fcmTokens = fcmTokens,
         _data = data;
@@ -203,6 +231,10 @@ class _$_User implements _User {
   final bool isActive;
   @override
   final String? typingGroup;
+  @override
+  final String? name;
+  @override
+  final String? profilePic;
   final Map<String, dynamic>? _data;
   @override
   Map<String, dynamic>? get data {
@@ -214,7 +246,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(createdAt: $createdAt, fcmTokens: $fcmTokens, lastSeen: $lastSeen, id: $id, isActive: $isActive, typingGroup: $typingGroup, data: $data)';
+    return 'User(createdAt: $createdAt, fcmTokens: $fcmTokens, lastSeen: $lastSeen, id: $id, isActive: $isActive, typingGroup: $typingGroup, name: $name, profilePic: $profilePic, data: $data)';
   }
 
   @override
@@ -233,6 +265,9 @@ class _$_User implements _User {
                 other.isActive == isActive) &&
             (identical(other.typingGroup, typingGroup) ||
                 other.typingGroup == typingGroup) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.profilePic, profilePic) ||
+                other.profilePic == profilePic) &&
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
@@ -246,6 +281,8 @@ class _$_User implements _User {
       id,
       isActive,
       typingGroup,
+      name,
+      profilePic,
       const DeepCollectionEquality().hash(_data));
 
   @JsonKey(ignore: true)
@@ -270,6 +307,8 @@ abstract class _User implements User {
       required final String id,
       final bool isActive,
       final String? typingGroup,
+      final String? name,
+      final String? profilePic,
       final Map<String, dynamic>? data}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
@@ -286,6 +325,10 @@ abstract class _User implements User {
   bool get isActive;
   @override
   String? get typingGroup;
+  @override
+  String? get name;
+  @override
+  String? get profilePic;
   @override
   Map<String, dynamic>? get data;
   @override

@@ -51,32 +51,28 @@ class _ChatScreenState extends State<_ChatScreen> {
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.white, //change your color here
-        ),
-        backgroundColor: colorScheme.primary,
-        centerTitle: false,
-        title: StreamBuilder<DocumentSnapshot<Object?>>(
-          stream: _chatController.getGroupUserStream(group),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox();
-            }
-            try {
-              user =
-                  User.fromJson(snapshot.data!.data() as Map<String, dynamic>);
-            } catch (e) {
-              debugPrint(e.toString());
-            }
-            if (user == null) return const SizedBox();
-            var isTyping = group.id == user!.typingGroup;
-            return widget.delegate.titleBuilder(context, user!, isTyping);
-          },
-        ),
-      ),
       body: Column(
         children: [
+          StreamBuilder<DocumentSnapshot<Object?>>(
+            stream: _chatController.getGroupUserStream(group),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return widget.delegate.chatAppbarBuilder(context, null, false);
+              }
+              try {
+                user = User.fromJson(
+                    snapshot.data!.data() as Map<String, dynamic>);
+              } catch (e) {
+                debugPrint(e.toString());
+              }
+              if (user == null) {
+                return widget.delegate.chatAppbarBuilder(context, null, false);
+              }
+              var isTyping = group.id == user!.typingGroup;
+              return widget.delegate
+                  .chatAppbarBuilder(context, user!, isTyping);
+            },
+          ),
           Expanded(
             child: ValueListenableBuilder<List<Message>>(
               valueListenable: messageNotifier,
