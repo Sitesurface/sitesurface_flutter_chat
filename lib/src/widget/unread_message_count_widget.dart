@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 
 class UnreadMessageCountWidget extends StatelessWidget {
@@ -11,7 +12,25 @@ class UnreadMessageCountWidget extends StatelessWidget {
     return StreamBuilder(
         stream: _chatController.getUnreadChatsCount(),
         builder: (context, snapshot) {
-          return builder(context, snapshot.data?.docs.length ?? 0);
+          if (!snapshot.hasData) {
+            return builder(context, 0);
+          } else {
+            if (snapshot.data!.docs.isEmpty) {
+              return builder(context, 0);
+            } else {
+              var groups = <Group>[];
+              for (var groupDoc in snapshot.data!.docs) {
+                groups.add(Group.fromJson(groupDoc.data()));
+              }
+              int count = 0;
+              for (var group in groups) {
+                if (group.lastMessage?.idFrom != _chatController.userId) {
+                  count++;
+                }
+              }
+              return builder(context, count);
+            }
+          }
         });
   }
 }
