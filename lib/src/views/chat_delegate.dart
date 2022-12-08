@@ -6,7 +6,6 @@ import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/helpers/image_helper.dart';
 
 import '../widget/chat_bottom_widget.dart';
-import '../widget/circle_icon_button.dart';
 import '../widget/message_item.dart';
 
 abstract class ChatDelegate<T> {

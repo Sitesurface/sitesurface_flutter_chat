@@ -11,7 +11,6 @@ import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
 
-import 'circle_icon_button.dart';
 part '../views/chat.dart';
 
 class ChatHandler extends StatefulWidget {
@@ -84,36 +83,37 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     child = widget.child;
     FirebaseMessaging.onMessage.listen((message) async {
-      if (message.data["id"] == "sitesurface_flutter_chat") {
-        var notification = message.notification;
-        if (!_chatController.isChatScreen && notification != null) {
-          flutterLocalNotificationsPlugin.show(
-              notification.hashCode,
-              notification.title ?? '',
-              notification.body ?? '',
-              ln.NotificationDetails(
-                android: ln.AndroidNotificationDetails(
-                  channel.id,
-                  channel.name,
-                  color: Colors.blue,
-                  icon: '@mipmap/ic_launcher',
-                ),
-              ),
-              payload: jsonEncode(message.data));
-        }
-      }
+      var group = getGroupFromMessage(message);
+      if (group == null) return;
+      if (group.id == _chatController.activeChatScreen) return;
+      flutterLocalNotificationsPlugin.show(
+          message.notification.hashCode,
+          message.notification?.title ?? '',
+          message.notification?.body ?? '',
+          ln.NotificationDetails(
+            android: ln.AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              color: Colors.blue,
+              icon: '@mipmap/ic_launcher',
+            ),
+          ),
+          payload: jsonEncode(message.data));
     });
 
     //When app is in Active State
     FirebaseMessaging.onMessageOpenedApp.listen(
       (message) async {
-        screenNav(message.data);
+        var group = getGroupFromMessage(message);
+        if (group == null) return;
+        screenNav(group);
       },
     );
     //When app is in Killed State
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
-      if (message == null) return;
-      screenNav(message.data);
+      var group = getGroupFromMessage(message);
+      if (group == null) return;
+      screenNav(group);
     });
   }
 
@@ -122,11 +122,20 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
     return child;
   }
 
-  void screenNav(Map<String, dynamic> message) {
-    if (_chatController.userId == null) return;
+  Group? getGroupFromMessage(RemoteMessage? message) {
     try {
-      if (_chatController.isChatScreen) return;
-      var group = Group.fromJson(jsonDecode(message["data"]));
+      if (_chatController.userId == null) return null;
+      if (message == null) return null;
+      if (message.data["id"] != "sitesurface_flutter_chat") return null;
+      var group = Group.fromJson(jsonDecode(message.data["data"]));
+      return group;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  void screenNav(Group group) {
+    try {
       widget.chatDelegate.group = group;
       Navigator.push(
         context,

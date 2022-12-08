@@ -34,8 +34,8 @@ class _ChatScreenState extends State<_ChatScreen> {
 
   @override
   void initState() {
-    _chatController.isChatScreen = true;
     group = widget.delegate.group!;
+    _chatController.activeChatScreen = group.id;
     getMessages();
     _messageSubscription =
         _chatController.getNewMessages(group.id, lastDocument).listen((data) {
@@ -243,7 +243,7 @@ class _ChatScreenState extends State<_ChatScreen> {
 
   @override
   void dispose() {
-    _chatController.isChatScreen = false;
+    _chatController.activeChatScreen = null;
     _messageSubscription.cancel();
     _scrollController.dispose();
     messageNotifier.dispose();

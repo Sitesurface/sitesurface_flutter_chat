@@ -19,8 +19,7 @@ class ChatController {
   final _groupCollection = FirebaseFirestore.instance.collection("groups");
   final _messageCollection = FirebaseFirestore.instance.collection("messages");
 
-  //TODO: Notifications should show if someone texts from other group
-  bool isChatScreen = false;
+  String? activeChatScreen;
 
   String? _userId;
   String? fcmServerKey;
@@ -160,6 +159,13 @@ class ChatController {
     return query.get();
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUnreadChatsCount() {
+    return _groupCollection
+        .where("unreadMessageCount", isGreaterThan: 0)
+        .where("users", arrayContains: _userId)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getNewMessages(String groupId,
       QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument) {
     return _messageCollection
@@ -193,21 +199,10 @@ class ChatController {
       var group = Group.fromJson(groupDoc.data() ?? {});
       if (group.lastMessage == null) return;
       if (group.lastMessage?.idFrom == _userId) return;
-      await updateGroup(
-          group.copyWith(lastMessage: null, unreadMessageCount: 0));
+      await updateGroup(group.copyWith(unreadMessageCount: 0));
     } catch (e) {
       debugPrint(e.toString());
     }
-  }
-
-  Future<int> getUnreadChatCount({
-    required Group group,
-  }) async {
-    var groups = await _groupCollection
-        .where("users", arrayContains: _userId)
-        .where("unreadMessageCount", isGreaterThan: 0)
-        .get();
-    return groups.docs.length;
   }
 
   Future<void> sendNotification(
@@ -257,6 +252,8 @@ class ChatController {
       if (_userId == null) return;
       String currTime = DateTime.now().millisecondsSinceEpoch.toString();
       if (message.content.trim().isEmpty) return;
+      var tempGroup = await getGroup(group.id);
+      if (tempGroup != null) group = tempGroup;
       var unreadMessageCount = group.unreadMessageCount;
       unreadMessageCount += 1;
       group = group.copyWith(
@@ -290,6 +287,16 @@ class ChatController {
       await updateUser(user.copyWith(lastSeen: currTime, isActive: isActive));
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  Future<Group?> getGroup(String groupId) async {
+    try {
+      var groupDoc = await _groupCollection.doc(groupId).get();
+      var group = Group.fromJson(groupDoc.data() ?? {});
+      return group;
+    } catch (e) {
+      return null;
     }
   }
 }

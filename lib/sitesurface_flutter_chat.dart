@@ -7,3 +7,4 @@ export 'src/models/message/message.dart';
 export 'src/models/user/user.dart';
 export 'src/widget/chat_list_widget.dart';
 export 'src/models/latlng/latlng.dart';
+export 'src/widget/unread_message_count_widget.dart';
