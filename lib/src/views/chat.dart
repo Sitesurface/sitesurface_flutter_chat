@@ -31,16 +31,23 @@ class _ChatScreenState extends State<_ChatScreen> {
       ValueNotifier<List<Message>>([]);
   late final StreamSubscription _messageSubscription;
   final ValueNotifier<bool> showGoToBottom = ValueNotifier<bool>(false);
+  User? currentUser;
 
   @override
   void initState() {
     group = widget.delegate.group!;
     _chatController.activeChatScreen = group.id;
+    currentUser = User(id: _chatController.userId ?? "");
+    _chatController.currentUser().then((value) {
+      currentUser = value;
+    });
     getMessages();
     _messageSubscription =
         _chatController.getNewMessages(group.id, lastDocument).listen((data) {
+      _chatController.resetUnreadMessages(group.id);
       var newMessage = Message.fromJson(data.docs.first.data());
       if (newMessage.idFrom == _chatController.userId) return;
+      if (messageNotifier.value.contains(newMessage)) return;
       messageNotifier.value = [newMessage, ...messageNotifier.value];
     });
     _scrollController.addListener(() {
@@ -164,7 +171,8 @@ class _ChatScreenState extends State<_ChatScreen> {
     _chatController.sendMessage(
         message: message,
         group: group,
-        notificationTitle: widget.delegate.notificationTitle(group, user!));
+        notificationTitle:
+            widget.delegate.notificationTitle(group, currentUser!));
   }
 
   _onCameraPressed() async {
@@ -189,7 +197,8 @@ class _ChatScreenState extends State<_ChatScreen> {
     _chatController.sendMessage(
         message: message.copyWith(content: url),
         group: group,
-        notificationTitle: widget.delegate.notificationTitle(group, user!));
+        notificationTitle:
+            widget.delegate.notificationTitle(group, currentUser!));
   }
 
   _onGalleryPressed() async {
@@ -214,7 +223,8 @@ class _ChatScreenState extends State<_ChatScreen> {
     _chatController.sendMessage(
         message: message.copyWith(content: url),
         group: group,
-        notificationTitle: widget.delegate.notificationTitle(group, user!));
+        notificationTitle:
+            widget.delegate.notificationTitle(group, currentUser!));
   }
 
   _onLocationPressed(BuildContext context) async {
@@ -238,7 +248,8 @@ class _ChatScreenState extends State<_ChatScreen> {
     _chatController.sendMessage(
         message: message,
         group: group,
-        notificationTitle: widget.delegate.notificationTitle(group, user!));
+        notificationTitle:
+            widget.delegate.notificationTitle(group, currentUser!));
   }
 
   @override

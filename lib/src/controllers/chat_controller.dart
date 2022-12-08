@@ -131,6 +131,15 @@ class ChatController {
     return getUserStream(recepientId);
   }
 
+  Future<User?> currentUser() async {
+    try {
+      var userDoc = await _userCollection.doc(_userId).get();
+      return User.fromJson(userDoc.data() ?? {});
+    } catch (e) {
+      return null;
+    }
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getChats(
       {required int limit, DocumentSnapshot? documentSnapshot}) {
     var query = FirebaseFirestore.instance
@@ -146,7 +155,7 @@ class ChatController {
 
   Future<QuerySnapshot<Map<String, dynamic>>> getInitialMessages(String groupId,
       QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument) {
-    _resetUnreadMessages(groupId);
+    resetUnreadMessages(groupId);
     var query = _messageCollection
         .doc(groupId)
         .collection(groupId)
@@ -168,6 +177,7 @@ class ChatController {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getNewMessages(String groupId,
       QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument) {
+    resetUnreadMessages(groupId);
     return _messageCollection
         .doc(groupId)
         .collection(groupId)
@@ -192,7 +202,7 @@ class ChatController {
     }
   }
 
-  void _resetUnreadMessages(String groupId) async {
+  void resetUnreadMessages(String groupId) async {
     try {
       var groupDoc = await _groupCollection.doc(groupId).get();
       if (!groupDoc.exists) return;
