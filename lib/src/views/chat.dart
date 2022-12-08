@@ -26,7 +26,7 @@ class _ChatScreenState extends State<_ChatScreen> {
   late Group group;
   User? user;
   final ScrollController _scrollController = ScrollController();
-
+  QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument;
   final ValueNotifier<List<Message>> messageNotifier =
       ValueNotifier<List<Message>>([]);
   late final StreamSubscription _messageSubscription;
@@ -36,12 +36,12 @@ class _ChatScreenState extends State<_ChatScreen> {
   void initState() {
     _chatController.isChatScreen = true;
     group = widget.delegate.group!;
-    _messageSubscription = _chatController.getMessages(group.id).listen((data) {
-      var tempMessageList = <Message>[];
-      for (var messageSnapshot in data.docs) {
-        tempMessageList.add(Message.fromJson(messageSnapshot.data()));
-      }
-      messageNotifier.value = tempMessageList;
+    getMessages();
+    _messageSubscription =
+        _chatController.getNewMessages(group.id, lastDocument).listen((data) {
+      var newMessage = Message.fromJson(data.docs.first.data());
+      if (newMessage.idFrom == _chatController.userId) return;
+      messageNotifier.value = [newMessage, ...messageNotifier.value];
     });
     _scrollController.addListener(() {
       var height = MediaQuery.of(context).size.height;
@@ -50,8 +50,24 @@ class _ChatScreenState extends State<_ChatScreen> {
       } else {
         showGoToBottom.value = false;
       }
+      if (_scrollController.position.maxScrollExtent ==
+          _scrollController.offset) {
+        getMessages();
+      }
     });
     super.initState();
+  }
+
+  getMessages() async {
+    var data = await _chatController.getInitialMessages(group.id, lastDocument);
+    if (data.docs.isNotEmpty) {
+      lastDocument = data.docs.last;
+      var tempMessageList = <Message>[];
+      for (var messageSnapshot in data.docs) {
+        tempMessageList.add(Message.fromJson(messageSnapshot.data()));
+      }
+      messageNotifier.value = [...messageNotifier.value, ...tempMessageList];
+    }
   }
 
   @override

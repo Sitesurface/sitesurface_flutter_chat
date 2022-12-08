@@ -381,17 +381,11 @@ class _ImageWidget extends StatelessWidget {
                     child: SizedBox(
                       width: width * 0.6,
                       height: width * 0.8,
-                      child: Stack(
-                        children: [
-                          Image.file(
-                            File(message.content),
-                            fit: BoxFit.cover,
-                            width: width * 0.6,
-                            height: width * 0.8,
-                          ),
-                          const Center(
-                              child: CircularProgressIndicator.adaptive())
-                        ],
+                      child: Image.file(
+                        File(message.content),
+                        fit: BoxFit.cover,
+                        width: width * 0.6,
+                        height: width * 0.8,
                       ),
                     ),
                   ),

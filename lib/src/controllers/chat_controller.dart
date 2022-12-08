@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:sitesurface_flutter_chat/src/helpers/image_helper.dart';
 import 'package:sitesurface_flutter_chat/src/helpers/notification_helper.dart';
 import 'package:sitesurface_flutter_chat/src/models/group/group.dart';
 import 'package:sitesurface_flutter_chat/src/models/message/message.dart';
@@ -147,12 +145,28 @@ class ChatController {
     return query.snapshots();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getMessages(String groupId) {
+  Future<QuerySnapshot<Map<String, dynamic>>> getInitialMessages(String groupId,
+      QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument) {
     _resetUnreadMessages(groupId);
+    var query = _messageCollection
+        .doc(groupId)
+        .collection(groupId)
+        .orderBy("timestamp", descending: true)
+        .limit(20);
+
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument);
+    }
+    return query.get();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getNewMessages(String groupId,
+      QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument) {
     return _messageCollection
         .doc(groupId)
         .collection(groupId)
         .orderBy("timestamp", descending: true)
+        .limit(1)
         .snapshots();
   }
 
