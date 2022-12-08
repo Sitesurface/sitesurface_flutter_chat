@@ -20,6 +20,7 @@ class ChatHandler extends StatefulWidget {
   final String? name;
   final String? profilePic;
   final Map<String, dynamic>? data;
+  final String? fcmServerKey;
 
   const ChatHandler({
     Key? key,
@@ -29,6 +30,7 @@ class ChatHandler extends StatefulWidget {
     required this.data,
     this.name,
     this.profilePic,
+    this.fcmServerKey,
   }) : super(key: key);
 
   @override
@@ -75,6 +77,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _chatController.init(
+        fcmServerKey: widget.fcmServerKey,
         userId: widget.userId,
         data: widget.data,
         name: widget.name,
