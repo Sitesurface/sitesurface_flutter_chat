@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
+import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 import 'package:sitesurface_flutter_chat/src/utils/try_parse.dart';
 
 import '../enums/message_type.dart';
@@ -52,7 +53,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
+    var theme = widget.delegate.chatTheme();
     return ValueListenableBuilder<List<Group>?>(
       valueListenable: groupNotifier,
       builder: (context, data, _) {
@@ -91,6 +92,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                         userSnapshot.data!.data() as Map<String, dynamic>);
                     if (user == null) return const SizedBox();
                     var isTyping = user.typingGroup == group.id;
+
                     return GestureDetector(
                       onTap: () {
                         showChat(
@@ -102,6 +104,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                         absorbing: true,
                         child: widget.builder == null
                             ? ListTile(
+                                tileColor: theme.chatTileBackgroundColor,
                                 leading: SizedBox(
                                   height: 40,
                                   width: 40,
@@ -130,9 +133,11 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                                 shape: BoxShape.circle,
                                                 color: () {
                                                   if (user.isActive) {
-                                                    return Colors.green;
+                                                    return theme
+                                                        .onlineIconColor;
                                                   } else {
-                                                    return Colors.red;
+                                                    return theme
+                                                        .offlineIconColor;
                                                   }
                                                 }()),
                                             margin:
@@ -141,11 +146,14 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                     ],
                                   ),
                                 ),
-                                title: Text(user.name ?? ""),
+                                title: Text(
+                                  user.name ?? "",
+                                  style: theme.chatTileNameStyle,
+                                ),
                                 subtitle: isTyping
-                                    ? const Text(
+                                    ? Text(
                                         "typing...",
-                                        style: TextStyle(color: Colors.green),
+                                        style: theme.chatTileTypingStyle,
                                       )
                                     : Text(
                                         () {
@@ -164,6 +172,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                           }
                                         }(),
                                         maxLines: 2,
+                                        style: theme.chatTileLastMessageStyle,
                                       ),
                                 trailing: Column(
                                   children: [
@@ -172,30 +181,26 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                     ),
                                     if (group.lastMessage != null)
                                       Text(
-                                        DateFormat("yMd").format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                            int.parse(
-                                                group.lastMessage?.timestamp ??
-                                                    ""),
+                                          DateFormat("yMd").format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              int.parse(group
+                                                      .lastMessage?.timestamp ??
+                                                  ""),
+                                            ),
                                           ),
-                                        ),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
+                                          style: theme.chatTileTimeStyle),
                                     if (group.unreadMessageCount > 0)
                                       Container(
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: colorScheme.primary),
+                                            color: theme
+                                                    .chatTileUnreadMessageCountBackgroundColor ??
+                                                Theme.of(context).primaryColor),
                                         padding: const EdgeInsets.all(6),
                                         child: Text(
-                                          "${group.unreadMessageCount}",
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+                                            "${group.unreadMessageCount}",
+                                            style: theme
+                                                .chatTileUnreadMessageCountTextStyle),
                                       ),
                                   ],
                                 ),

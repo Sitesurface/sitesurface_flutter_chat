@@ -118,9 +118,9 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                                 Column(
                                   children: [
                                     CircleIconButton(
-                                      color: Colors.redAccent,
+                                      color: theme.cameraIconBackgroundColor,
                                       onTap: widget.onCameraTapped,
-                                      iconData: Icons.photo_camera,
+                                      icon: theme.cameraIconIcon,
                                     ),
                                     const SizedBox(
                                       height: 5,
@@ -131,9 +131,9 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                                 Column(
                                   children: [
                                     CircleIconButton(
-                                      color: Colors.purpleAccent,
+                                      color: theme.galleryIconBackgroundColor,
                                       onTap: widget.onGalleryTapped,
-                                      iconData: Icons.photo,
+                                      icon: theme.galleryIcon,
                                     ),
                                     const SizedBox(
                                       height: 5,
@@ -144,15 +144,15 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                                 Column(
                                   children: [
                                     CircleIconButton(
-                                      color: Colors.lightGreen,
-                                      onTap: () {
-                                        if (widget.onLocationTapped == null) {
-                                          return;
-                                        }
-                                        widget.onLocationTapped!(context);
-                                      },
-                                      iconData: Icons.place,
-                                    ),
+                                        color:
+                                            theme.locationIconBackgroundColor,
+                                        onTap: () {
+                                          if (widget.onLocationTapped == null) {
+                                            return;
+                                          }
+                                          widget.onLocationTapped!(context);
+                                        },
+                                        icon: theme.locationIcon),
                                     const SizedBox(
                                       height: 5,
                                     ),

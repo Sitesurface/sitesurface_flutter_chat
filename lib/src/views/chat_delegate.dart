@@ -42,7 +42,8 @@ abstract class ChatDelegate<T> {
     final theme = InheritedChatTheme.of(context).theme;
     return AppBar(
       foregroundColor: theme.appBarForegroundColor,
-      backgroundColor: theme.appBarBackgroundColor,
+      backgroundColor:
+          theme.appBarBackgroundColor ?? Theme.of(context).primaryColor,
       centerTitle: false,
       title: user == null
           ? const SizedBox()

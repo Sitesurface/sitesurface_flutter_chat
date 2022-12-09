@@ -42,8 +42,8 @@ abstract class ChatTheme {
   /// Background color for senders Message bubble
   final Color sendersMessageBackgroundColor;
 
-  // /// Background color for chat screen
-  // final Color chatBackgroundColor;
+  /// Background color for chat screen
+  final Color? chatBackgroundColor;
 
   /// send Icon color
   final Widget sendIcon;
@@ -51,51 +51,59 @@ abstract class ChatTheme {
   /// Attachment Icon on chat screen
   final Widget attachmentIcon;
 
-  // /// Background color for chat screen input field
-  // final Color inputFieldBackgroundColor;
-
-  // /// Foreground color for chat screen input field
-  // final Color inputFieldForegroundColor;
-
-  // /// TextStyle for chat screen input field
-  // final TextStyle inputFieldTextStyle;
-
   /// Background color for date separator on chat screen
   final Color dateSeparatorBackgroundColor;
 
   /// TextStyle for date separator on chat screen
   final TextStyle dateSeparatorTextStyle;
 
-  // /// background color for go to bottom button
-  // final Color goToBottomButtonBackgroundColor;
+  /// Icon for go to bottom button
+  final Widget goToBottomButtonIcon;
 
-  // /// Icon for go to bottom button
-  // final Widget goToBottomButtonIcon;
+  /// Background color for chat tile
+  final Color? chatTileBackgroundColor;
 
-  // /// Background color for chat tile
-  // final Color chatTileBackgroundColor;
+  /// TextStyle for chat tile name
+  final TextStyle? chatTileNameStyle;
 
-  // /// TextStyle for chat tile name
-  // final TextStyle chatTileNameStyle;
+  /// TextStyle for typing on chat tile
+  final TextStyle? chatTileTypingStyle;
 
-  // /// TextStyle for chat tile last message
-  // final TextStyle chatTileLastMessageStyle;
+  /// TextStyle for chat tile last message
+  final TextStyle? chatTileLastMessageStyle;
 
-  // /// TextStyle for chat tile time
-  // final TextStyle chatTileTimeStyle;
+  /// TextStyle for chat tile time
+  final TextStyle chatTileTimeStyle;
 
-  // /// Background color for chat tile unread message count
-  // final Color chatTileUnreadMessageCountBackgroundColor;
+  /// Background color for chat tile unread message count
+  final Color? chatTileUnreadMessageCountBackgroundColor;
 
-  // /// TextStyle for chat tile unread message count
-  // final TextStyle chatTileUnreadMessageCountTextStyle;
+  /// TextStyle for chat tile unread message count
+  final TextStyle chatTileUnreadMessageCountTextStyle;
 
-  // /// Offline Icon color for chat tile
-  // final Color offlineIconColor;
+  /// Offline Icon color for chat tile
+  final Color offlineIconColor;
 
-  // /// Online Icon color for chat tile
-  // final Color onlineIconColor;
+  /// Online Icon color for chat tile
+  final Color onlineIconColor;
 
+  /// Camera attachment icon
+  final Widget cameraIconIcon;
+
+  /// Gallery attachment icon
+  final Widget galleryIcon;
+
+  /// Location attachment icon
+  final Widget locationIcon;
+
+  /// Camera attachment backgroundIcon
+  final Color cameraIconBackgroundColor;
+
+  /// Gallery attachment backgroundIcon
+  final Color galleryIconBackgroundColor;
+
+  /// Location attachment backgroundIcon
+  final Color locationIconBackgroundColor;
   const ChatTheme({
     this.appBarBackgroundColor,
     this.appBarForegroundColor,
@@ -109,24 +117,27 @@ abstract class ChatTheme {
     required this.sendersMessageStyle,
     required this.sendersMessageTimeStyle,
     required this.sendersMessageBackgroundColor,
-    // required this.chatBackgroundColor,
+    this.chatBackgroundColor,
     required this.sendIcon,
     required this.attachmentIcon,
-    // required this.inputFieldBackgroundColor,
-    // required this.inputFieldForegroundColor,
-    // required this.inputFieldTextStyle,
     required this.dateSeparatorBackgroundColor,
     required this.dateSeparatorTextStyle,
-    // required this.goToBottomButtonBackgroundColor,
-    // required this.goToBottomButtonIcon,
-    // required this.chatTileBackgroundColor,
-    // required this.chatTileNameStyle,
-    // required this.chatTileLastMessageStyle,
-    // required this.chatTileTimeStyle,
-    // required this.chatTileUnreadMessageCountBackgroundColor,
-    // required this.chatTileUnreadMessageCountTextStyle,
-    // required this.offlineIconColor,
-    // required this.onlineIconColor,
+    required this.goToBottomButtonIcon,
+    this.chatTileBackgroundColor,
+    this.chatTileNameStyle,
+    this.chatTileTypingStyle,
+    this.chatTileLastMessageStyle,
+    required this.chatTileTimeStyle,
+    this.chatTileUnreadMessageCountBackgroundColor,
+    required this.chatTileUnreadMessageCountTextStyle,
+    required this.offlineIconColor,
+    required this.onlineIconColor,
+    required this.cameraIconIcon,
+    required this.galleryIcon,
+    required this.locationIcon,
+    required this.cameraIconBackgroundColor,
+    required this.galleryIconBackgroundColor,
+    required this.locationIconBackgroundColor,
   });
 }
 
@@ -146,7 +157,7 @@ class DefaultChatTheme extends ChatTheme {
 
   const DefaultChatTheme({
     super.appBarBackgroundColor,
-    super.appBarForegroundColor,
+    super.appBarForegroundColor = Colors.white,
     super.appbarNameStyle = const TextStyle(
         fontSize: 18, height: 1.5, wordSpacing: 0.15, color: Colors.white),
     super.appBarTypingTextStyle = const TextStyle(
@@ -178,6 +189,34 @@ class DefaultChatTheme extends ChatTheme {
       ),
     ),
     super.attachmentIcon = const _AttachIcon(),
+    super.onlineIconColor = Colors.green,
+    super.offlineIconColor = Colors.redAccent,
+    super.chatTileNameStyle,
+    super.chatTileLastMessageStyle,
+    super.chatTileTimeStyle =
+        const TextStyle(fontSize: 12, height: 1.5, wordSpacing: 0.4),
+    super.chatTileTypingStyle = const TextStyle(color: Colors.green),
+    super.chatTileUnreadMessageCountBackgroundColor,
+    super.chatTileUnreadMessageCountTextStyle = const TextStyle(
+        color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+    super.goToBottomButtonIcon = const Icon(Icons.keyboard_double_arrow_down),
+    super.chatTileBackgroundColor,
+    super.chatBackgroundColor,
+    super.cameraIconIcon = const Icon(
+      Icons.photo_camera,
+      color: Colors.white,
+    ),
+    super.cameraIconBackgroundColor = Colors.redAccent,
+    super.galleryIcon = const Icon(
+      Icons.photo,
+      color: Colors.white,
+    ),
+    super.galleryIconBackgroundColor = Colors.purpleAccent,
+    super.locationIcon = const Icon(
+      Icons.place,
+      color: Colors.white,
+    ),
+    super.locationIconBackgroundColor = Colors.lightGreen,
   }) : super();
 }
 

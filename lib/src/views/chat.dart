@@ -67,6 +67,7 @@ class _ChatScreenState extends State<_ChatScreen> {
     return InheritedChatTheme(
       theme: widget.delegate.chatTheme(),
       child: Scaffold(
+        backgroundColor: widget.delegate.chatTheme().chatBackgroundColor,
         body: Column(
           children: [
             StreamBuilder<DocumentSnapshot<Object?>>(
@@ -119,15 +120,16 @@ class _ChatScreenState extends State<_ChatScreen> {
                                       _scrollController.jumpTo(0.0);
                                     },
                                     icon: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                          color: brightness == Brightness.dark
-                                              ? Colors.grey.withOpacity(0.85)
-                                              : Colors.white.withOpacity(0.85),
-                                          shape: BoxShape.circle),
-                                      child: const Icon(
-                                          Icons.keyboard_double_arrow_down),
-                                    ));
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                            color: brightness == Brightness.dark
+                                                ? Colors.grey.withOpacity(0.85)
+                                                : Colors.white
+                                                    .withOpacity(0.85),
+                                            shape: BoxShape.circle),
+                                        child: widget.delegate
+                                            .chatTheme()
+                                            .goToBottomButtonIcon));
                               } else {
                                 return const SizedBox();
                               }
