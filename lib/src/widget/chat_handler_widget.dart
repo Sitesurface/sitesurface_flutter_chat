@@ -189,7 +189,9 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
         onDidReceiveNotificationResponse: (notificationResponse) async {
       if (notificationResponse.payload == null) return;
       var message = jsonDecode(notificationResponse.payload!);
-      screenNav(message);
+      if (message["id"] != "sitesurface_flutter_chat") return;
+      var group = Group.fromJson(jsonDecode(message["data"]));
+      screenNav(group);
     });
   }
 }

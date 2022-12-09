@@ -244,6 +244,7 @@ class _ChatScreenState extends State<_ChatScreen> {
         group: group,
         notificationTitle:
             widget.delegate.notificationTitle(group, currentUser!));
+    _chatController.updateTyping(null);
   }
 
   @override
@@ -254,6 +255,7 @@ class _ChatScreenState extends State<_ChatScreen> {
     messageNotifier.dispose();
     textEditingController.dispose();
     debouncer.dispose();
+    _chatController.updateTyping(null);
     super.dispose();
   }
 

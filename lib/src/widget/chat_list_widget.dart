@@ -45,7 +45,8 @@ class _ChatListWidgetState extends State<ChatListWidget> {
       for (var groupSnapshot in data.docs) {
         tempGroup.add(Group.fromJson(groupSnapshot.data()));
       }
-      groupNotifier.value = [...groupNotifier.value ?? [], ...tempGroup];
+      groupNotifier.value =
+          <Group>{...groupNotifier.value ?? [], ...tempGroup}.toList();
     }
   }
 
@@ -235,7 +236,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
         }
       }
 
-      groupNotifier.value = [...newGroup, ...tempGroup];
+      groupNotifier.value = <Group>{...newGroup, ...tempGroup}.toList();
     });
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
