@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
@@ -10,25 +11,53 @@ import '../enums/message_type.dart';
 
 class ChatListWidget extends StatefulWidget {
   final ChatDelegate delegate;
-  const ChatListWidget({super.key, this.builder, required this.delegate});
-  final Widget Function(
-      BuildContext context, User user, Group group, int index)? builder;
+  const ChatListWidget({
+    super.key,
+    this.builder,
+    required this.delegate,
+  });
+  final Widget Function(BuildContext context, User user, bool isTyping,
+      Group group, int index)? builder;
   @override
   State<ChatListWidget> createState() => _ChatListWidgetState();
 }
 
 class _ChatListWidgetState extends State<ChatListWidget> {
   final _chatController = ChatController();
+  final _scrollController = ScrollController();
+  QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument;
+  final ValueNotifier<List<Group>?> groupNotifier =
+      ValueNotifier<List<Group>?>(null);
+  late final StreamSubscription _groupSubscription;
+
+  @override
+  void initState() {
+    getGroups();
+    addListeners();
+    super.initState();
+  }
+
+  getGroups() async {
+    var data = await _chatController.getChats(lastDocument: lastDocument);
+    if (data.docs.isNotEmpty) {
+      lastDocument = data.docs.last;
+      var tempGroup = <Group>[];
+      for (var groupSnapshot in data.docs) {
+        tempGroup.add(Group.fromJson(groupSnapshot.data()));
+      }
+      groupNotifier.value = [...groupNotifier.value ?? [], ...tempGroup];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: _chatController.getChats(limit: 10),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+    return ValueListenableBuilder<List<Group>?>(
+      valueListenable: groupNotifier,
+      builder: (context, data, _) {
+        if (data == null) {
           return const SizedBox();
-        } else if (snapshot.data!.docs.isEmpty) {
+        } else if (data.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -44,11 +73,9 @@ class _ChatListWidgetState extends State<ChatListWidget> {
             separatorBuilder: (_, __) => const SizedBox(
               height: 5,
             ),
-            itemCount: snapshot.data?.docs.length ?? 0,
+            itemCount: data.length,
             itemBuilder: (context, index) {
-              var group = tryParse<Group?>(
-                  Group.fromJson, snapshot.data!.docs[index].data());
-              if (group == null) return const SizedBox();
+              var group = data[index];
               if (group.unreadMessageCount > 0) {
                 if (_chatController.userId == group.lastMessage?.idFrom) {
                   group = group.copyWith(unreadMessageCount: 0);
@@ -62,12 +89,13 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                     var user = tryParse<User>(User.fromJson,
                         userSnapshot.data!.data() as Map<String, dynamic>);
                     if (user == null) return const SizedBox();
+                    var isTyping = user.typingGroup == group.id;
                     return GestureDetector(
                       onTap: () {
                         showChat(
                             context: context,
                             delegate: widget.delegate,
-                            group: group!);
+                            group: group);
                       },
                       child: AbsorbPointer(
                         absorbing: true,
@@ -113,31 +141,40 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                   ),
                                 ),
                                 title: Text(user.name ?? ""),
-                                subtitle: Text(
-                                  () {
-                                    if (group?.lastMessage == null) return "";
-                                    switch (group!.lastMessage!.type) {
-                                      case MessageType.text:
-                                        return group.lastMessage?.content ?? "";
-                                      case MessageType.image:
-                                        return "Shared image";
-                                      case MessageType.location:
-                                        return "Shared location";
-                                    }
-                                  }(),
-                                  maxLines: 2,
-                                ),
+                                subtitle: isTyping
+                                    ? const Text(
+                                        "typing...",
+                                        style: TextStyle(color: Colors.green),
+                                      )
+                                    : Text(
+                                        () {
+                                          if (group.lastMessage == null) {
+                                            return "";
+                                          }
+                                          switch (group.lastMessage!.type) {
+                                            case MessageType.text:
+                                              return group
+                                                      .lastMessage?.content ??
+                                                  "";
+                                            case MessageType.image:
+                                              return "Shared image";
+                                            case MessageType.location:
+                                              return "Shared location";
+                                          }
+                                        }(),
+                                        maxLines: 2,
+                                      ),
                                 trailing: Column(
                                   children: [
                                     const SizedBox(
                                       height: 8,
                                     ),
-                                    if (group?.lastMessage != null)
+                                    if (group.lastMessage != null)
                                       Text(
                                         DateFormat("yMd").format(
                                           DateTime.fromMillisecondsSinceEpoch(
                                             int.parse(
-                                                group?.lastMessage?.timestamp ??
+                                                group.lastMessage?.timestamp ??
                                                     ""),
                                           ),
                                         ),
@@ -145,14 +182,14 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                             .textTheme
                                             .bodySmall,
                                       ),
-                                    if ((group?.unreadMessageCount ?? 0) > 0)
+                                    if (group.unreadMessageCount > 0)
                                       Container(
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: colorScheme.primary),
                                         padding: const EdgeInsets.all(6),
                                         child: Text(
-                                          "${group?.unreadMessageCount}",
+                                          "${group.unreadMessageCount}",
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
@@ -162,7 +199,8 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                   ],
                                 ),
                               )
-                            : widget.builder!(context, user, group!, index),
+                            : widget.builder!(
+                                context, user, isTyping, group, index),
                       ),
                     );
                   });
@@ -171,5 +209,39 @@ class _ChatListWidgetState extends State<ChatListWidget> {
         }
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _groupSubscription.cancel();
+    super.dispose();
+  }
+
+  void addListeners() {
+    _groupSubscription = _chatController.getNewChat().listen((data) {
+      var newGroup = <Group>[];
+      for (var groupSnapshot in data.docChanges) {
+        if (groupSnapshot.doc.data() == null) continue;
+        newGroup.add(Group.fromJson(groupSnapshot.doc.data()!));
+      }
+
+      var tempGroup = [...groupNotifier.value ?? []];
+      for (var group in newGroup) {
+        for (var i = 0; i < tempGroup.length; i++) {
+          if (tempGroup[i].id == group.id) {
+            tempGroup.removeAt(i);
+            continue;
+          }
+        }
+      }
+
+      groupNotifier.value = [...newGroup, ...tempGroup];
+    });
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent ==
+          _scrollController.offset) {
+        getGroups();
+      }
+    });
   }
 }

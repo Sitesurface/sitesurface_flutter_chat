@@ -140,17 +140,25 @@ class ChatController {
     }
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getChats(
-      {required int limit, DocumentSnapshot? documentSnapshot}) {
-    var query = FirebaseFirestore.instance
-        .collection("groups")
+  Future<QuerySnapshot<Map<String, dynamic>>> getChats(
+      {QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument}) {
+    var query = _groupCollection
         .where("users", arrayContains: _userId)
-        .limit(limit)
+        .limit(10)
         .orderBy('timestamp', descending: true);
-    if (documentSnapshot != null) {
-      query = query.startAfterDocument(documentSnapshot);
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument);
     }
-    return query.snapshots();
+    return query.get();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getNewChat() {
+    return _groupCollection
+        .where("users", arrayContains: _userId)
+        .limit(10)
+        .orderBy('timestamp', descending: true)
+        .limit(10)
+        .snapshots();
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>> getInitialMessages(String groupId,
@@ -175,8 +183,7 @@ class ChatController {
         .snapshots();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getNewMessages(String groupId,
-      QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getNewMessages(String groupId) {
     resetUnreadMessages(groupId);
     return _messageCollection
         .doc(groupId)
@@ -307,6 +314,16 @@ class ChatController {
       return group;
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<void> updateTyping(String? groupId) async {
+    try {
+      await _userCollection
+          .doc(_userId)
+          .set({"typingGroup": groupId}, SetOptions(merge: true));
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

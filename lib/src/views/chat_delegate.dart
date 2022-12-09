@@ -89,11 +89,13 @@ abstract class ChatDelegate<T> {
   }
 
   Widget chatBottomBuilder(
+      TextEditingController controller,
       void Function(String text)? onSendTapped,
       void Function()? onCameraTapped,
       void Function()? onGalleryTapped,
       void Function(BuildContext context)? onLocationTapped) {
     return ChatBottomWidget(
+      textEditingController: controller,
       onSendTapped: onSendTapped,
       onCameraTapped: onCameraTapped,
       onGalleryTapped: onGalleryTapped,

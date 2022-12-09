@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'circle_icon_button.dart';
 
 class ChatBottomWidget extends StatefulWidget {
+  final TextEditingController textEditingController;
   final void Function(String text)? onSendTapped;
   final void Function()? onCameraTapped;
   final void Function()? onGalleryTapped;
@@ -13,6 +14,7 @@ class ChatBottomWidget extends StatefulWidget {
     this.onCameraTapped,
     this.onGalleryTapped,
     this.onLocationTapped,
+    required this.textEditingController,
   }) : super(key: key);
 
   @override
@@ -20,12 +22,13 @@ class ChatBottomWidget extends StatefulWidget {
 }
 
 class _ChatBottomWidgetState extends State<ChatBottomWidget> {
-  final textEditingController = TextEditingController();
+  late final TextEditingController textEditingController;
   bool isTextEmpty = true;
+
   @override
-  void dispose() {
-    textEditingController.dispose();
-    super.dispose();
+  void initState() {
+    textEditingController = widget.textEditingController;
+    super.initState();
   }
 
   @override
@@ -173,7 +176,6 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                 onTap: () {
                   if (widget.onSendTapped == null) return;
                   widget.onSendTapped!(textEditingController.text);
-                  textEditingController.clear();
                   isTextEmpty = true;
                   setState(() {});
                 },

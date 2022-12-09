@@ -31,7 +31,10 @@ class _ChatScreenState extends State<_ChatScreen> {
       ValueNotifier<List<Message>>([]);
   late final StreamSubscription _messageSubscription;
   final ValueNotifier<bool> showGoToBottom = ValueNotifier<bool>(false);
+  final textEditingController = TextEditingController();
+  final debouncer = Debouncer(seconds: 3);
   User? currentUser;
+  bool isTyping = false;
 
   @override
   void initState() {
@@ -42,26 +45,7 @@ class _ChatScreenState extends State<_ChatScreen> {
       currentUser = value;
     });
     getMessages();
-    _messageSubscription =
-        _chatController.getNewMessages(group.id, lastDocument).listen((data) {
-      _chatController.resetUnreadMessages(group.id);
-      var newMessage = Message.fromJson(data.docs.first.data());
-      if (newMessage.idFrom == _chatController.userId) return;
-      if (messageNotifier.value.contains(newMessage)) return;
-      messageNotifier.value = [newMessage, ...messageNotifier.value];
-    });
-    _scrollController.addListener(() {
-      var height = MediaQuery.of(context).size.height;
-      if (_scrollController.offset >= height) {
-        showGoToBottom.value = true;
-      } else {
-        showGoToBottom.value = false;
-      }
-      if (_scrollController.position.maxScrollExtent ==
-          _scrollController.offset) {
-        getMessages();
-      }
-    });
+    _addListeners();
     super.initState();
   }
 
@@ -150,8 +134,12 @@ class _ChatScreenState extends State<_ChatScreen> {
               },
             ),
           ),
-          widget.delegate.chatBottomBuilder(_onSendTapped, _onCameraPressed,
-              _onGalleryPressed, _onLocationPressed),
+          widget.delegate.chatBottomBuilder(
+              textEditingController,
+              _onSendTapped,
+              _onCameraPressed,
+              _onGalleryPressed,
+              _onLocationPressed),
         ],
       ),
     );
@@ -173,6 +161,7 @@ class _ChatScreenState extends State<_ChatScreen> {
         group: group,
         notificationTitle:
             widget.delegate.notificationTitle(group, currentUser!));
+    textEditingController.clear();
   }
 
   _onCameraPressed() async {
@@ -258,6 +247,41 @@ class _ChatScreenState extends State<_ChatScreen> {
     _messageSubscription.cancel();
     _scrollController.dispose();
     messageNotifier.dispose();
+    textEditingController.dispose();
+    debouncer.dispose();
     super.dispose();
+  }
+
+  void _addListeners() {
+    _messageSubscription =
+        _chatController.getNewMessages(group.id).listen((data) {
+      _chatController.resetUnreadMessages(group.id);
+      var newMessage = Message.fromJson(data.docs.first.data());
+      if (newMessage.idFrom == _chatController.userId) return;
+      if (messageNotifier.value.contains(newMessage)) return;
+      messageNotifier.value = [newMessage, ...messageNotifier.value];
+    });
+    _scrollController.addListener(() {
+      var height = MediaQuery.of(context).size.height;
+      if (_scrollController.offset >= height) {
+        showGoToBottom.value = true;
+      } else {
+        showGoToBottom.value = false;
+      }
+      if (_scrollController.position.maxScrollExtent ==
+          _scrollController.offset) {
+        getMessages();
+      }
+    });
+    textEditingController.addListener(() {
+      if (!isTyping) {
+        isTyping = true;
+        _chatController.updateTyping(group.id);
+      }
+      debouncer.run(() {
+        isTyping = false;
+        _chatController.updateTyping(null);
+      });
+    });
   }
 }
