@@ -100,7 +100,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
               channel.id,
               channel.name,
               color: Colors.blue,
-              icon: '@mipmap/ic_launcher',
+              icon: '@mipmap/launcher_icon',
             ),
           ),
           payload: jsonEncode(message.data));
@@ -167,7 +167,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
     );
 
     const initializationSettingsAndroid =
-        ln.AndroidInitializationSettings('@mipmap/ic_launcher');
+        ln.AndroidInitializationSettings('@mipmap/launcher_icon');
 
     ln.DarwinInitializationSettings initializationSettingsIOS =
         ln.DarwinInitializationSettings(

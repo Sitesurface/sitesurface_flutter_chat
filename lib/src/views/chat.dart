@@ -268,7 +268,8 @@ class _ChatScreenState extends State<_ChatScreen> {
       var newMessage = Message.fromJson(data.docs.first.data());
       if (newMessage.idFrom == _chatController.userId) return;
       if (messageNotifier.value.contains(newMessage)) return;
-      messageNotifier.value = [newMessage, ...messageNotifier.value];
+      messageNotifier.value =
+          <Message>{newMessage, ...messageNotifier.value}.toList();
     });
     _scrollController.addListener(() {
       var height = MediaQuery.of(context).size.height;

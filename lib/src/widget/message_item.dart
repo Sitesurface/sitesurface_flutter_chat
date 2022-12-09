@@ -151,7 +151,7 @@ class _TextMessageWidget extends StatelessWidget {
       children: [
         Padding(
           padding: !showNip
-              ? EdgeInsets.only(left: isSender ? 5 : 0, right: isSender ? 5 : 0)
+              ? EdgeInsets.only(left: isSender ? 0 : 6, right: isSender ? 6 : 0)
               : EdgeInsets.zero,
           child: Bubble(
             showNip: true,
