@@ -24,6 +24,7 @@ abstract class ChatDelegate<T> {
   Widget chatMessageBuilder(BuildContext context, int index, Message message,
       String currUserId, List<Message> listMessage) {
     return MessageItem(
+        openMap: launchMap,
         index: index,
         message: message,
         currUserId: currUserId,
@@ -102,6 +103,8 @@ abstract class ChatDelegate<T> {
       onLocationTapped: onLocationTapped,
     );
   }
+
+  Future<void> launchMap(String url) async {}
 
   Future<File?> getCameraImage();
   Future<File?> getGalleryImage();

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../sitesurface_flutter_chat.dart';
 import 'chat_bubble/chat_bubble.dart';
@@ -14,6 +14,7 @@ class MessageItem extends StatelessWidget {
   final String? currUserId;
   final BuildContext context;
   final List<Message> listMessage;
+  final void Function(String url)? openMap;
 
   const MessageItem(
       {Key? key,
@@ -21,7 +22,8 @@ class MessageItem extends StatelessWidget {
       required this.message,
       required this.currUserId,
       required this.context,
-      required this.listMessage})
+      required this.listMessage,
+      this.openMap})
       : super(key: key);
 
   @override
@@ -212,12 +214,14 @@ class _LocationWidget extends StatelessWidget {
   final Message message;
   final bool isSender;
   final bool showNip;
-  const _LocationWidget(
-      {Key? key,
-      required this.message,
-      required this.isSender,
-      required this.showNip})
-      : super(key: key);
+  final void Function(String url)? onTap;
+  const _LocationWidget({
+    Key? key,
+    required this.message,
+    required this.isSender,
+    required this.showNip,
+    this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -306,10 +310,8 @@ class _LocationWidget extends StatelessWidget {
   Future<void> openMap(String latlng) async {
     String googleUrl =
         'https://www.google.com/maps/search/?api=1&query=$latlng';
-    if (await canLaunchUrlString(googleUrl)) {
-      await launchUrlString(googleUrl, mode: LaunchMode.externalApplication);
-    } else {
-      debugPrint('Could not open the map.');
+    if (onTap != null) {
+      onTap!(googleUrl);
     }
   }
 }
