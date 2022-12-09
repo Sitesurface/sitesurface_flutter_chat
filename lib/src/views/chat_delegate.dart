@@ -4,12 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/helpers/image_helper.dart';
+import 'package:sitesurface_flutter_chat/src/utils/theme/chat_theme.dart';
+import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 
 import '../widget/chat_bottom_widget.dart';
 import '../widget/message_item.dart';
 
 abstract class ChatDelegate<T> {
   Group? group;
+
+  ChatTheme chatTheme() {
+    return DefaultChatTheme();
+  }
 
   /// notification title which is sent to user
   String notificationTitle(Group group, User user) {
@@ -33,13 +39,10 @@ abstract class ChatDelegate<T> {
   }
 
   Widget chatAppbarBuilder(BuildContext context, User? user, bool isTyping) {
-    var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
+    final theme = InheritedChatTheme.of(context).theme;
     return AppBar(
-      iconTheme: const IconThemeData(
-        color: Colors.white, //change your color here
-      ),
-      backgroundColor: colorScheme.primary,
+      foregroundColor: theme.appBarForegroundColor,
+      backgroundColor: theme.appBarBackgroundColor,
       centerTitle: false,
       title: user == null
           ? const SizedBox()
@@ -59,26 +62,20 @@ abstract class ChatDelegate<T> {
                     children: [
                       Text(
                         user.name ?? "",
-                        style: textTheme.bodyLarge
-                            ?.copyWith(fontSize: 18, color: Colors.white),
+                        style: theme.appbarNameStyle,
                       ),
                       () {
                         if (isTyping) {
                           return Text(
                             "Typing....",
-                            style: textTheme.bodySmall
-                                ?.copyWith(color: Colors.green),
+                            style: theme.appBarTypingTextStyle,
                           );
                         } else if (user.isActive) {
-                          return Text("Online",
-                              style: textTheme.bodySmall
-                                  ?.copyWith(color: Colors.green));
+                          return Text("Online", style: theme.appBarOnlineStyle);
                         } else {
                           var lastSeen =
                               "last seen ${DateFormat("dd MMMM, hh:mm aa").format(DateTime.fromMillisecondsSinceEpoch(int.parse(user.lastSeen ?? "")))}";
-                          return Text(lastSeen,
-                              style: textTheme.bodySmall
-                                  ?.copyWith(color: Colors.white));
+                          return Text(lastSeen, style: theme.lastSeenStyle);
                         }
                       }(),
                     ],

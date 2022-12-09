@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
+import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 
 import '../../sitesurface_flutter_chat.dart';
 import 'chat_bubble/chat_bubble.dart';
@@ -67,6 +68,8 @@ class MessageItem extends StatelessWidget {
       }
     }
 
+    final theme = InheritedChatTheme.of(context).theme;
+
     return Container(
       alignment: Alignment.center,
       margin: const EdgeInsets.only(bottom: 5.0),
@@ -77,7 +80,7 @@ class MessageItem extends StatelessWidget {
             Bubble(
               margin: const BubbleEdges.only(top: 20, bottom: 20),
               alignment: Alignment.center,
-              color: const Color.fromRGBO(212, 234, 244, 1.0),
+              color: theme.dateSeparatorBackgroundColor,
               child: Text(
                   isToday(index)
                       ? "TODAY"
@@ -87,7 +90,7 @@ class MessageItem extends StatelessWidget {
                               DateTime.fromMillisecondsSinceEpoch(
                                   int.parse(message.timestamp))),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 11.0, color: Colors.black)),
+                  style: theme.dateSeparatorTextStyle),
             ),
           () {
             switch (message.type) {
@@ -140,8 +143,8 @@ class _TextMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
-    var textTheme = Theme.of(context).textTheme;
+    var theme = InheritedChatTheme.of(context).theme;
+
     return Column(
       crossAxisAlignment:
           isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -160,7 +163,9 @@ class _TextMessageWidget extends StatelessWidget {
             padding: const BubbleEdges.all(10),
             margin: const BubbleEdges.only(top: 5),
             alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-            color: isSender ? const Color(0xffe9ffd9) : Colors.white,
+            color: isSender
+                ? theme.sendersMessageBackgroundColor
+                : theme.recieverMessageBackgroundColor,
             child: Container(
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.7),
@@ -171,7 +176,9 @@ class _TextMessageWidget extends StatelessWidget {
                 children: [
                   Text(
                     message.content,
-                    style: textTheme.bodyMedium?.copyWith(color: Colors.black),
+                    style: isSender
+                        ? theme.sendersMessageStyle
+                        : theme.recieverMessageStyle,
                   ),
                   const SizedBox(
                     width: 10,
@@ -184,20 +191,11 @@ class _TextMessageWidget extends StatelessWidget {
                         DateFormat("hh:mm aa").format(
                             DateTime.fromMillisecondsSinceEpoch(
                                 int.parse(message.timestamp))),
-                        style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 10.0,
-                            fontStyle: FontStyle.italic),
+                        style: isSender
+                            ? theme.sendersMessageTimeStyle
+                            : theme.recieverMessageTimeStyle,
                       ),
-                      if (isSender)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 3),
-                          child: Icon(
-                            Icons.check,
-                            size: 12,
-                            color: Colors.blueAccent,
-                          ),
-                        )
+                      if (isSender) theme.sendIcon
                     ],
                   ),
                 ],
@@ -226,7 +224,6 @@ class _LocationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    var textTheme = Theme.of(context).textTheme;
     var mapUri = Uri(
       scheme: 'https',
       host: 'maps.googleapis.com',
@@ -240,6 +237,7 @@ class _LocationWidget extends StatelessWidget {
       },
     );
     var url = mapUri.toString();
+    final theme = InheritedChatTheme.of(context).theme;
     return Bubble(
       showNip: true,
       nip: showNip
@@ -250,7 +248,9 @@ class _LocationWidget extends StatelessWidget {
       padding: const BubbleEdges.all(5),
       margin: const BubbleEdges.only(top: 5),
       alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-      color: isSender ? const Color(0xffe9ffd9) : Colors.white,
+      color: isSender
+          ? theme.sendersMessageBackgroundColor
+          : theme.recieverMessageBackgroundColor,
       child: InkWell(
         onTap: () {
           openMap(message.content);
@@ -274,8 +274,9 @@ class _LocationWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Shared location",
-                        style: textTheme.bodyMedium
-                            ?.copyWith(color: Colors.black)),
+                        style: isSender
+                            ? theme.sendersMessageStyle
+                            : theme.recieverMessageStyle),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -283,18 +284,11 @@ class _LocationWidget extends StatelessWidget {
                           DateFormat("hh:mm aa").format(
                               DateTime.fromMillisecondsSinceEpoch(
                                   int.parse(message.timestamp))),
-                          style: const TextStyle(
-                              fontSize: 10.0, fontStyle: FontStyle.italic),
+                          style: isSender
+                              ? theme.sendersMessageTimeStyle
+                              : theme.recieverMessageTimeStyle,
                         ),
-                        if (isSender)
-                          const Padding(
-                            padding: EdgeInsets.only(left: 3),
-                            child: Icon(
-                              Icons.check,
-                              size: 12,
-                              color: Colors.blueAccent,
-                            ),
-                          )
+                        if (isSender) theme.sendIcon
                       ],
                     )
                   ],
@@ -326,6 +320,7 @@ class _ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    final theme = InheritedChatTheme.of(context).theme;
     return Bubble(
       showNip: true,
       nip: showNip
@@ -336,7 +331,9 @@ class _ImageWidget extends StatelessWidget {
       padding: const BubbleEdges.all(5),
       margin: const BubbleEdges.only(top: 5),
       alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-      color: isSender ? const Color(0xffe9ffd9) : Colors.white,
+      color: isSender
+          ? theme.sendersMessageBackgroundColor
+          : theme.recieverMessageBackgroundColor,
       child: Stack(
         children: [
           Material(
@@ -403,20 +400,11 @@ class _ImageWidget extends StatelessWidget {
                   DateFormat("hh:mm aa").format(
                       DateTime.fromMillisecondsSinceEpoch(
                           int.parse(message.timestamp))),
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontSize: 10.0,
-                      fontStyle: FontStyle.italic),
+                  style: isSender
+                      ? theme.sendersMessageTimeStyle
+                      : theme.recieverMessageTimeStyle,
                 ),
-                if (isSender)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 3),
-                    child: Icon(
-                      Icons.check,
-                      size: 12,
-                      color: Colors.blueAccent,
-                    ),
-                  )
+                if (isSender) theme.sendIcon
               ],
             ),
           )
@@ -427,6 +415,6 @@ class _ImageWidget extends StatelessWidget {
 
   // check if text is link
   bool isLink(String text) {
-    return text.contains("https");
+    return text.contains("http");
   }
 }
