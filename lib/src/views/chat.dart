@@ -64,83 +64,88 @@ class _ChatScreenState extends State<_ChatScreen> {
   @override
   Widget build(BuildContext context) {
     var brightness = Theme.of(context).brightness;
-    return Scaffold(
-      body: Column(
-        children: [
-          StreamBuilder<DocumentSnapshot<Object?>>(
-            stream: _chatController.getGroupUserStream(group),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return widget.delegate.chatAppbarBuilder(context, null, false);
-              }
-              try {
-                user = User.fromJson(
-                    snapshot.data!.data() as Map<String, dynamic>);
-              } catch (e) {
-                debugPrint(e.toString());
-              }
-              if (user == null) {
-                return widget.delegate.chatAppbarBuilder(context, null, false);
-              }
-              var isTyping = group.id == user!.typingGroup;
-              return widget.delegate
-                  .chatAppbarBuilder(context, user!, isTyping);
-            },
-          ),
-          Expanded(
-            child: ValueListenableBuilder<List<Message>>(
-              valueListenable: messageNotifier,
-              builder: (context, value, _) {
-                return Stack(
-                  children: [
-                    ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.all(10),
-                      itemCount: value.length,
-                      reverse: true,
-                      controller: _scrollController,
-                      itemBuilder: (context, index) => widget.delegate
-                          .chatMessageBuilder(context, index, value[index],
-                              _chatController.userId!, value),
-                    ),
-                    Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: ValueListenableBuilder(
-                          valueListenable: showGoToBottom,
-                          builder: (context, value, _) {
-                            if (value) {
-                              return IconButton(
-                                  onPressed: () {
-                                    _scrollController.jumpTo(0.0);
-                                  },
-                                  icon: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                        color: brightness == Brightness.dark
-                                            ? Colors.grey.withOpacity(0.85)
-                                            : Colors.white.withOpacity(0.85),
-                                        shape: BoxShape.circle),
-                                    child: const Icon(
-                                        Icons.keyboard_double_arrow_down),
-                                  ));
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
-                        ))
-                  ],
-                );
+    return InheritedChatTheme(
+      theme: widget.delegate.chatTheme(),
+      child: Scaffold(
+        body: Column(
+          children: [
+            StreamBuilder<DocumentSnapshot<Object?>>(
+              stream: _chatController.getGroupUserStream(group),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return widget.delegate
+                      .chatAppbarBuilder(context, null, false);
+                }
+                try {
+                  user = User.fromJson(
+                      snapshot.data!.data() as Map<String, dynamic>);
+                } catch (e) {
+                  debugPrint(e.toString());
+                }
+                if (user == null) {
+                  return widget.delegate
+                      .chatAppbarBuilder(context, null, false);
+                }
+                var isTyping = group.id == user!.typingGroup;
+                return widget.delegate
+                    .chatAppbarBuilder(context, user!, isTyping);
               },
             ),
-          ),
-          widget.delegate.chatBottomBuilder(
-              textEditingController,
-              _onSendTapped,
-              _onCameraPressed,
-              _onGalleryPressed,
-              _onLocationPressed),
-        ],
+            Expanded(
+              child: ValueListenableBuilder<List<Message>>(
+                valueListenable: messageNotifier,
+                builder: (context, value, _) {
+                  return Stack(
+                    children: [
+                      ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.all(10),
+                        itemCount: value.length,
+                        reverse: true,
+                        controller: _scrollController,
+                        itemBuilder: (context, index) => widget.delegate
+                            .chatMessageBuilder(context, index, value[index],
+                                _chatController.userId!, value),
+                      ),
+                      Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: ValueListenableBuilder(
+                            valueListenable: showGoToBottom,
+                            builder: (context, value, _) {
+                              if (value) {
+                                return IconButton(
+                                    onPressed: () {
+                                      _scrollController.jumpTo(0.0);
+                                    },
+                                    icon: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                          color: brightness == Brightness.dark
+                                              ? Colors.grey.withOpacity(0.85)
+                                              : Colors.white.withOpacity(0.85),
+                                          shape: BoxShape.circle),
+                                      child: const Icon(
+                                          Icons.keyboard_double_arrow_down),
+                                    ));
+                              } else {
+                                return const SizedBox();
+                              }
+                            },
+                          ))
+                    ],
+                  );
+                },
+              ),
+            ),
+            widget.delegate.chatBottomBuilder(
+                textEditingController,
+                _onSendTapped,
+                _onCameraPressed,
+                _onGalleryPressed,
+                _onLocationPressed),
+          ],
+        ),
       ),
     );
   }

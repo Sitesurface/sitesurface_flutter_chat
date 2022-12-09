@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 import 'circle_icon_button.dart';
 
 class ChatBottomWidget extends StatefulWidget {
@@ -34,7 +34,7 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
   @override
   Widget build(BuildContext context) {
     var brightness = Theme.of(context).brightness;
-
+    var theme = InheritedChatTheme.of(context).theme;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -95,82 +95,76 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
             ),
             if (isTextEmpty)
               CircleIconButton(
-                onTap: () {
-                  showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) {
-                        return Container(
-                          height: 130,
-                          margin: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.grey[800]
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(16)),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                children: [
-                                  CircleIconButton(
-                                    color: Colors.redAccent,
-                                    onTap: widget.onCameraTapped,
-                                    iconData: Icons.photo_camera,
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  const Text("Camera"),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  CircleIconButton(
-                                    color: Colors.purpleAccent,
-                                    onTap: widget.onGalleryTapped,
-                                    iconData: Icons.photo,
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  const Text("Gallery"),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  CircleIconButton(
-                                    color: Colors.lightGreen,
-                                    onTap: () {
-                                      if (widget.onLocationTapped == null) {
-                                        return;
-                                      }
-                                      widget.onLocationTapped!(context);
-                                    },
-                                    iconData: Icons.place,
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  const Text("Location"),
-                                ],
-                              )
-                            ],
-                          ),
-                        );
-                      });
-                },
-                icon: Transform.rotate(
-                    angle: 50 * math.pi / 180,
-                    child: const Icon(
-                      Icons.attachment,
-                      color: Colors.white,
-                    )),
-              )
+                  onTap: () {
+                    showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return Container(
+                            height: 130,
+                            margin: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.grey[800]
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(16)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    CircleIconButton(
+                                      color: Colors.redAccent,
+                                      onTap: widget.onCameraTapped,
+                                      iconData: Icons.photo_camera,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    const Text("Camera"),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    CircleIconButton(
+                                      color: Colors.purpleAccent,
+                                      onTap: widget.onGalleryTapped,
+                                      iconData: Icons.photo,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    const Text("Gallery"),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    CircleIconButton(
+                                      color: Colors.lightGreen,
+                                      onTap: () {
+                                        if (widget.onLocationTapped == null) {
+                                          return;
+                                        }
+                                        widget.onLocationTapped!(context);
+                                      },
+                                      iconData: Icons.place,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    const Text("Location"),
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                  },
+                  icon: theme.attachmentIcon)
             else
               CircleIconButton(
                 onTap: () {
