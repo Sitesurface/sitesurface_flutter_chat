@@ -5,10 +5,17 @@ import 'package:http/http.dart' as http;
 
 class NotificationHelper {
   final _chatController = ChatController.instance;
-  Future<void> sendPushNotification(
-      String? title, var userToken, String? body, Map<String, dynamic>? payload,
+  Future<void> sendPushNotification(String? title, var userToken, String? body,
+      Map<String, dynamic>? payload, String groupId,
       {int? badgeCount}) async {
     if (_chatController.fcmServerKey == null) return;
+
+    if (body == null) return;
+
+    if (body.length > 800) {
+      body = "${body.substring(0, 800)}...";
+    }
+
     const postUrl = 'https://fcm.googleapis.com/fcm/send';
     final headers = {
       'content-type': 'application/json',

@@ -57,7 +57,9 @@ class _ChatScreenState extends State<_ChatScreen> {
       for (var messageSnapshot in data.docs) {
         tempMessageList.add(Message.fromJson(messageSnapshot.data()));
       }
-      messageNotifier.value = [...messageNotifier.value, ...tempMessageList];
+      // TODO : Check if this assignment is expensive and fix it if it is
+      messageNotifier.value =
+          {...messageNotifier.value, ...tempMessageList}.toList();
     }
   }
 
@@ -76,8 +78,7 @@ class _ChatScreenState extends State<_ChatScreen> {
                 stream: _chatController.getGroupUserStream(group),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return widget.delegate
-                        .chatAppbarBuilder(context, null, false);
+                    return widget.delegate.chatAppbarBuilder(null, false);
                   }
                   try {
                     user = User.fromJson(
@@ -86,12 +87,10 @@ class _ChatScreenState extends State<_ChatScreen> {
                     debugPrint(e.toString());
                   }
                   if (user == null) {
-                    return widget.delegate
-                        .chatAppbarBuilder(context, null, false);
+                    return widget.delegate.chatAppbarBuilder(null, false);
                   }
                   var isTyping = group.id == user!.typingGroup;
-                  return widget.delegate
-                      .chatAppbarBuilder(context, user!, isTyping);
+                  return widget.delegate.chatAppbarBuilder(user!, isTyping);
                 },
               ),
               Expanded(
@@ -174,6 +173,7 @@ class _ChatScreenState extends State<_ChatScreen> {
         notificationTitle:
             widget.delegate.notificationTitle(group, currentUser!));
     textEditingController.clear();
+    _chatController.updateTyping(null);
   }
 
   _onCameraPressed() async {
@@ -251,7 +251,6 @@ class _ChatScreenState extends State<_ChatScreen> {
         group: group,
         notificationTitle:
             widget.delegate.notificationTitle(group, currentUser!));
-    _chatController.updateTyping(null);
   }
 
   @override
@@ -273,6 +272,7 @@ class _ChatScreenState extends State<_ChatScreen> {
       var newMessage = Message.fromJson(data.docs.first.data());
       if (newMessage.idFrom == _chatController.userId) return;
       if (messageNotifier.value.contains(newMessage)) return;
+      // TODO : Check if this assignment is expensive and fix it if it is
       messageNotifier.value =
           <Message>{newMessage, ...messageNotifier.value}.toList();
     });

@@ -242,64 +242,69 @@ class _LocationWidget extends StatelessWidget {
     var url = mapUri.toString();
     final theme = InheritedChatTheme.of(context).theme;
     final l10n = InheritedL10n.of(context).l10n;
-    return Bubble(
-      showNip: true,
-      nip: showNip
-          ? isSender
-              ? BubbleNip.rightTop
-              : BubbleNip.leftTop
-          : null,
-      padding: const BubbleEdges.all(5),
-      margin: const BubbleEdges.only(top: 5),
-      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-      color: isSender
-          ? theme.sendersMessageBackgroundColor
-          : theme.recieverMessageBackgroundColor,
-      child: InkWell(
-        onTap: () {
-          openMap(message.content);
-        },
-        child: Column(
-          children: [
-            Container(
-              height: width * 0.4,
-              width: width * 0.6,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                      image: NetworkImage(url), fit: BoxFit.cover)),
-              margin: const EdgeInsets.only(bottom: 10.0),
-            ),
-            SizedBox(
-              width: width * 0.6,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(l10n.sharedLocationLabel,
-                        style: isSender
-                            ? theme.sendersMessageStyle
-                            : theme.recieverMessageStyle),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          DateFormat("hh:mm aa").format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(message.timestamp))),
-                          style: isSender
-                              ? theme.sendersMessageTimeStyle
-                              : theme.recieverMessageTimeStyle,
-                        ),
-                        if (isSender) theme.sendIcon
-                      ],
-                    )
-                  ],
-                ),
+    return Padding(
+      padding: !showNip
+          ? EdgeInsets.only(left: isSender ? 0 : 6, right: isSender ? 6 : 0)
+          : EdgeInsets.zero,
+      child: Bubble(
+        showNip: true,
+        nip: showNip
+            ? isSender
+                ? BubbleNip.rightTop
+                : BubbleNip.leftTop
+            : null,
+        padding: const BubbleEdges.all(5),
+        margin: const BubbleEdges.only(top: 5),
+        alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+        color: isSender
+            ? theme.sendersMessageBackgroundColor
+            : theme.recieverMessageBackgroundColor,
+        child: InkWell(
+          onTap: () {
+            openMap(message.content);
+          },
+          child: Column(
+            children: [
+              Container(
+                height: width * 0.4,
+                width: width * 0.6,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                        image: NetworkImage(url), fit: BoxFit.cover)),
+                margin: const EdgeInsets.only(bottom: 10.0),
               ),
-            )
-          ],
+              SizedBox(
+                width: width * 0.6,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(l10n.sharedLocationLabel,
+                          style: isSender
+                              ? theme.sendersMessageStyle
+                              : theme.recieverMessageStyle),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            DateFormat("hh:mm aa").format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    int.parse(message.timestamp))),
+                            style: isSender
+                                ? theme.sendersMessageTimeStyle
+                                : theme.recieverMessageTimeStyle,
+                          ),
+                          if (isSender) theme.sendIcon
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -325,94 +330,99 @@ class _ImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     final theme = InheritedChatTheme.of(context).theme;
-    return Bubble(
-      showNip: true,
-      nip: showNip
-          ? isSender
-              ? BubbleNip.rightTop
-              : BubbleNip.leftTop
-          : null,
-      padding: const BubbleEdges.all(5),
-      margin: const BubbleEdges.only(top: 5),
-      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-      color: isSender
-          ? theme.sendersMessageBackgroundColor
-          : theme.recieverMessageBackgroundColor,
-      child: Stack(
-        children: [
-          Material(
-            borderRadius: BorderRadius.circular(5.0),
-            clipBehavior: Clip.hardEdge,
-            child: isLink(message.content)
-                ? InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Scaffold(
-                              backgroundColor: Colors.white,
-                              appBar: AppBar(
-                                elevation: 0,
-                                leading: IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: const Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.black,
+    return Padding(
+      padding: !showNip
+          ? EdgeInsets.only(left: isSender ? 0 : 6, right: isSender ? 6 : 0)
+          : EdgeInsets.zero,
+      child: Bubble(
+        showNip: true,
+        nip: showNip
+            ? isSender
+                ? BubbleNip.rightTop
+                : BubbleNip.leftTop
+            : null,
+        padding: const BubbleEdges.all(5),
+        margin: const BubbleEdges.only(top: 5),
+        alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+        color: isSender
+            ? theme.sendersMessageBackgroundColor
+            : theme.recieverMessageBackgroundColor,
+        child: Stack(
+          children: [
+            Material(
+              borderRadius: BorderRadius.circular(5.0),
+              clipBehavior: Clip.hardEdge,
+              child: isLink(message.content)
+                  ? InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Scaffold(
+                                backgroundColor: Colors.white,
+                                appBar: AppBar(
+                                  elevation: 0,
+                                  leading: IconButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                body: Center(
+                                  child: InteractiveViewer(
+                                    child: Image.network(message.content),
                                   ),
                                 ),
                               ),
-                              body: Center(
-                                child: InteractiveViewer(
-                                  child: Image.network(message.content),
-                                ),
-                              ),
-                            ),
-                          ));
-                    },
-                    child: Image.network(
-                      message.content,
-                      errorBuilder: (_, __, ___) => Container(),
-                      width: width * 0.6,
-                      height: width * 0.8,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: SizedBox(
-                      width: width * 0.6,
-                      height: width * 0.8,
-                      child: Image.file(
-                        File(message.content),
-                        fit: BoxFit.cover,
+                            ));
+                      },
+                      child: Image.network(
+                        message.content,
+                        errorBuilder: (_, __, ___) => Container(),
                         width: width * 0.6,
                         height: width * 0.8,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: SizedBox(
+                        width: width * 0.6,
+                        height: width * 0.8,
+                        child: Image.file(
+                          File(message.content),
+                          fit: BoxFit.cover,
+                          width: width * 0.6,
+                          height: width * 0.8,
+                        ),
                       ),
                     ),
-                  ),
-          ),
-          Positioned(
-            right: 4,
-            bottom: 4,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  DateFormat("hh:mm aa").format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(message.timestamp))),
-                  style: isSender
-                      ? theme.sendersMessageTimeStyle
-                      : theme.recieverMessageTimeStyle,
-                ),
-                if (isSender) theme.sendIcon
-              ],
             ),
-          )
-        ],
+            Positioned(
+              right: 4,
+              bottom: 4,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    DateFormat("hh:mm aa").format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            int.parse(message.timestamp))),
+                    style: isSender
+                        ? theme.sendersMessageTimeStyle
+                        : theme.recieverMessageTimeStyle,
+                  ),
+                  if (isSender) theme.sendIcon
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

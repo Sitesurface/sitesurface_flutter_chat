@@ -80,6 +80,7 @@ class ChatController {
   }
 
   Future<void> updateUser(User user) async {
+    checkUserId();
     var userMap = user.toJson();
 
     // removing fields which shouldn't be updated
@@ -96,6 +97,7 @@ class ChatController {
   }
 
   Future<void> updateGroup(Group group) async {
+    checkUserId();
     var groupMap = group.toJson();
 
     // removing fields which shouldn't be updated
@@ -112,6 +114,8 @@ class ChatController {
   }
 
   Future<void> createGroup(Group group) async {
+    checkUserId();
+    if (_userId == null) return;
     var newGroup = group.copyWith(
         timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
         unreadMessageCount: 0);
@@ -120,18 +124,25 @@ class ChatController {
         .set(newGroup.toJson(), SetOptions(merge: true));
   }
 
-  Stream<DocumentSnapshot> getUserStream(String userId) =>
-      _userCollection.doc(userId).snapshots();
+  Stream<DocumentSnapshot> getUserStream(String userId) {
+    checkUserId();
+    return _userCollection.doc(userId).snapshots();
+  }
 
-  String getRecepientFromGroup(Group group) =>
-      group.users.firstWhere((element) => _userId != element);
+  String getRecepientFromGroup(Group group) {
+    checkUserId();
+    return group.users.firstWhere((element) => _userId != element);
+  }
 
   Stream<DocumentSnapshot> getGroupUserStream(Group group) {
+    checkUserId();
+    if (_userId == null) throw Exception("userId is no");
     var recepientId = group.users.firstWhere((element) => element != _userId);
     return getUserStream(recepientId);
   }
 
   Future<User?> currentUser() async {
+    checkUserId();
     try {
       var userDoc = await _userCollection.doc(_userId).get();
       return User.fromJson(userDoc.data() ?? {});
@@ -142,6 +153,7 @@ class ChatController {
 
   Future<QuerySnapshot<Map<String, dynamic>>> getChats(
       {QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument}) {
+    checkUserId();
     var query = _groupCollection
         .where("users", arrayContains: _userId)
         .limit(10)
@@ -153,6 +165,7 @@ class ChatController {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getNewChat() {
+    checkUserId();
     return _groupCollection
         .where("users", arrayContains: _userId)
         .limit(10)
@@ -163,6 +176,7 @@ class ChatController {
 
   Future<QuerySnapshot<Map<String, dynamic>>> getInitialMessages(String groupId,
       QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument) {
+    checkUserId();
     resetUnreadMessages(groupId);
     var query = _messageCollection
         .doc(groupId)
@@ -177,6 +191,7 @@ class ChatController {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getUnreadChatsCount() {
+    checkUserId();
     return _groupCollection
         .where("unreadMessageCount", isGreaterThan: 0)
         .where("users", arrayContains: _userId)
@@ -184,6 +199,7 @@ class ChatController {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getNewMessages(String groupId) {
+    checkUserId();
     resetUnreadMessages(groupId);
     return _messageCollection
         .doc(groupId)
@@ -194,6 +210,7 @@ class ChatController {
   }
 
   Future<void> logout() async {
+    checkUserId();
     try {
       var fcmToken = await FirebaseMessaging.instance.getToken();
       var userDoc = await _userCollection.doc(_userId).get();
@@ -210,6 +227,7 @@ class ChatController {
   }
 
   void resetUnreadMessages(String groupId) async {
+    checkUserId();
     try {
       var groupDoc = await _groupCollection.doc(groupId).get();
       if (!groupDoc.exists) return;
@@ -226,6 +244,7 @@ class ChatController {
       {required Group group,
       required Message message,
       required String title}) async {
+    checkUserId();
     try {
       var notifificationHelper = NotificationHelper();
       var body = "";
@@ -254,6 +273,7 @@ class ChatController {
             group.toJson(),
           ),
         },
+        group.id,
       );
     } catch (e) {
       debugPrint(e.toString());
@@ -265,6 +285,7 @@ class ChatController {
     required Group group,
     required String notificationTitle,
   }) async {
+    checkUserId();
     try {
       if (_userId == null) return;
       String currTime = DateTime.now().millisecondsSinceEpoch.toString();
@@ -297,6 +318,7 @@ class ChatController {
   }
 
   Future<void> setUserState(bool isActive) async {
+    checkUserId();
     try {
       String currTime = DateTime.now().millisecondsSinceEpoch.toString();
       var userDoc = await _userCollection.doc(_userId).get();
@@ -308,6 +330,7 @@ class ChatController {
   }
 
   Future<Group?> getGroup(String groupId) async {
+    checkUserId();
     try {
       var groupDoc = await _groupCollection.doc(groupId).get();
       var group = Group.fromJson(groupDoc.data() ?? {});
@@ -318,6 +341,7 @@ class ChatController {
   }
 
   Future<void> updateTyping(String? groupId) async {
+    checkUserId();
     try {
       await _userCollection
           .doc(_userId)
@@ -325,5 +349,9 @@ class ChatController {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  void checkUserId() {
+    if (_userId == null) throw Exception("userId is not initialised");
   }
 }
