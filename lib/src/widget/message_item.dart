@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
+import 'package:sitesurface_flutter_chat/src/utils/datetime_utils.dart';
 import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 
 import '../../sitesurface_flutter_chat.dart';
@@ -83,14 +84,11 @@ class MessageItem extends StatelessWidget {
               margin: const BubbleEdges.only(top: 20, bottom: 20),
               alignment: Alignment.center,
               color: theme.dateSeparatorBackgroundColor,
-              child: Text(
-                  isToday(index)
-                      ? l10n.todayLabel
-                      : isYesterday(index)
-                          ? l10n.yesterdayLabel
-                          : DateFormat("dd MMMM yyy").format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(message.timestamp))),
+              child: Text(() {
+                var separatorDate = DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(message.timestamp));
+                return dateSeparatorFormat(separatorDate, context);
+              }(),
                   textAlign: TextAlign.center,
                   style: theme.dateSeparatorTextStyle),
             ),

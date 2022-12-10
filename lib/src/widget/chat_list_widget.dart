@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
+import 'package:sitesurface_flutter_chat/src/utils/datetime_utils.dart';
 import 'package:sitesurface_flutter_chat/src/utils/try_parse.dart';
 import 'package:sitesurface_flutter_chat/src/views/chat_screen.dart';
 
@@ -186,15 +186,16 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                       height: 8,
                                     ),
                                     if (group.lastMessage != null)
-                                      Text(
-                                          DateFormat("yMd").format(
+                                      Text(() {
+                                        var lastMessageDate =
                                             DateTime.fromMillisecondsSinceEpoch(
-                                              int.parse(group
-                                                      .lastMessage?.timestamp ??
+                                          int.parse(
+                                              group.lastMessage?.timestamp ??
                                                   ""),
-                                            ),
-                                          ),
-                                          style: theme.chatTileTimeStyle),
+                                        );
+                                        return chatWidgetDateFormat(
+                                            lastMessageDate, l10n);
+                                      }(), style: theme.chatTileTimeStyle),
                                     if (group.unreadMessageCount > 0)
                                       Container(
                                         decoration: BoxDecoration(

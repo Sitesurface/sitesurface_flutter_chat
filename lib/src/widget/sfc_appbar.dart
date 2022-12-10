@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../sitesurface_flutter_chat.dart';
+import '../utils/datetime_utils.dart';
 import '../utils/locale/inherited_chat_locale.dart';
 import '../utils/theme/inherited_chat_theme.dart';
 
@@ -52,8 +53,11 @@ class SfcAppBar extends StatelessWidget {
                           return Text(l10n.onlineLabel,
                               style: theme.appBarOnlineStyle);
                         } else {
+                          var lastSeenDate =
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  int.parse(user?.lastSeen ?? ""));
                           var lastSeen =
-                              "${l10n.lastSeenLabel} ${DateFormat("dd MMMM, hh:mm aa").format(DateTime.fromMillisecondsSinceEpoch(int.parse(user?.lastSeen ?? "")))}";
+                              "${l10n.lastSeenLabel} ${lastSeenDateFormat(lastSeenDate, context)}, ${DateFormat("hh:mm aa").format(lastSeenDate)}";
                           return Text(lastSeen, style: theme.lastSeenStyle);
                         }
                       }(),
