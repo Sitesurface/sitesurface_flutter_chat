@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
-import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 import 'package:sitesurface_flutter_chat/src/utils/try_parse.dart';
 
 import '../enums/message_type.dart';
@@ -16,9 +15,11 @@ class ChatListWidget extends StatefulWidget {
     super.key,
     this.builder,
     required this.delegate,
+    this.noChatFound,
   });
   final Widget Function(BuildContext context, User user, bool isTyping,
       Group group, int index)? builder;
+  final Widget? noChatFound;
   @override
   State<ChatListWidget> createState() => _ChatListWidgetState();
 }
@@ -54,22 +55,24 @@ class _ChatListWidgetState extends State<ChatListWidget> {
   @override
   Widget build(BuildContext context) {
     var theme = widget.delegate.chatTheme();
+    var l10n = widget.delegate.chatL10n();
     return ValueListenableBuilder<List<Group>?>(
       valueListenable: groupNotifier,
       builder: (context, data, _) {
         if (data == null) {
           return const SizedBox();
         } else if (data.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  "No chats found",
+          return widget.noChatFound ??
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      l10n.noChatMessagesLabel,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
+              );
         } else {
           return ListView.separated(
             separatorBuilder: (_, __) => const SizedBox(
@@ -152,7 +155,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                 ),
                                 subtitle: isTyping
                                     ? Text(
-                                        "typing...",
+                                        l10n.typingLabel,
                                         style: theme.chatTileTypingStyle,
                                       )
                                     : Text(
@@ -166,9 +169,9 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                                       .lastMessage?.content ??
                                                   "";
                                             case MessageType.image:
-                                              return "Shared image";
+                                              return l10n.sharedImageLabel;
                                             case MessageType.location:
-                                              return "Shared location";
+                                              return l10n.sharedLocationLabel;
                                           }
                                         }(),
                                         maxLines: 2,

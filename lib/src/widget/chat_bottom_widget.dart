@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
+import '../utils/locale/inherited_chat_locale.dart';
 import 'circle_icon_button.dart';
 
 class ChatBottomWidget extends StatefulWidget {
@@ -35,6 +36,7 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
   Widget build(BuildContext context) {
     var brightness = Theme.of(context).brightness;
     var theme = InheritedChatTheme.of(context).theme;
+    final l10n = InheritedL10n.of(context).l10n;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -55,7 +57,7 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                 setState(() {});
               },
               decoration: InputDecoration(
-                hintText: "Message",
+                hintText: l10n.messageInputHint,
                 isDense: true,
                 filled: true,
                 fillColor: brightness == Brightness.light
@@ -125,7 +127,7 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    const Text("Camera"),
+                                    Text(l10n.cameraAttachmentLabel),
                                   ],
                                 ),
                                 Column(
@@ -138,7 +140,7 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    const Text("Gallery"),
+                                    Text(l10n.galleryAttachmentLabel),
                                   ],
                                 ),
                                 Column(
@@ -156,7 +158,7 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    const Text("Location"),
+                                    Text(l10n.locationAttachmentLabel),
                                   ],
                                 )
                               ],

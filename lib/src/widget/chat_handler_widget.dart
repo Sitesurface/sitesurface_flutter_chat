@@ -11,6 +11,7 @@ import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
 import 'package:sitesurface_flutter_chat/src/utils/debouncer.dart';
+import 'package:sitesurface_flutter_chat/src/utils/locale/inherited_chat_locale.dart';
 import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 
 part '../views/chat.dart';

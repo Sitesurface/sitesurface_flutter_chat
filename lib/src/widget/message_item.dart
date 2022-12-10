@@ -7,6 +7,7 @@ import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
 import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 
 import '../../sitesurface_flutter_chat.dart';
+import '../utils/locale/inherited_chat_locale.dart';
 import 'chat_bubble/chat_bubble.dart';
 
 class MessageItem extends StatelessWidget {
@@ -69,6 +70,7 @@ class MessageItem extends StatelessWidget {
     }
 
     final theme = InheritedChatTheme.of(context).theme;
+    final l10n = InheritedL10n.of(context).l10n;
 
     return Container(
       alignment: Alignment.center,
@@ -83,9 +85,9 @@ class MessageItem extends StatelessWidget {
               color: theme.dateSeparatorBackgroundColor,
               child: Text(
                   isToday(index)
-                      ? "TODAY"
+                      ? l10n.todayLabel
                       : isYesterday(index)
-                          ? "YESTERDAY"
+                          ? l10n.yesterdayLabel
                           : DateFormat("dd MMMM yyy").format(
                               DateTime.fromMillisecondsSinceEpoch(
                                   int.parse(message.timestamp))),
@@ -218,6 +220,7 @@ class _LocationWidget extends StatelessWidget {
     required this.message,
     required this.isSender,
     required this.showNip,
+    // ignore: unused_element
     this.onTap,
   }) : super(key: key);
 
@@ -238,6 +241,7 @@ class _LocationWidget extends StatelessWidget {
     );
     var url = mapUri.toString();
     final theme = InheritedChatTheme.of(context).theme;
+    final l10n = InheritedL10n.of(context).l10n;
     return Bubble(
       showNip: true,
       nip: showNip
@@ -273,7 +277,7 @@ class _LocationWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Shared location",
+                    Text(l10n.sharedLocationLabel,
                         style: isSender
                             ? theme.sendersMessageStyle
                             : theme.recieverMessageStyle),
