@@ -96,6 +96,21 @@ class ChatController {
     await _userCollection.doc(_userId).set(userMap, SetOptions(merge: true));
   }
 
+  Future<void> updateUserData(
+      {String? name, String? profilePic, Map<String, dynamic>? data}) async {
+    Map<String, dynamic> map = {};
+    if (name != null) {
+      map["name"] = name;
+    }
+    if (profilePic != null) {
+      map["profilePic"] = profilePic;
+    }
+    if (data != null) {
+      map["data"] = data;
+    }
+    await _userCollection.doc(_userId).set(map, SetOptions(merge: true));
+  }
+
   Future<void> updateGroup(Group group) async {
     checkUserId();
     var groupMap = group.toJson();
@@ -111,6 +126,14 @@ class ChatController {
     }
 
     await _groupCollection.doc(group.id).set(groupMap, SetOptions(merge: true));
+  }
+
+  Future<void> updateGroupData(
+      {required Group group, required Map<String, dynamic> data}) async {
+    checkUserId();
+    await _groupCollection
+        .doc(group.id)
+        .set({"data": data}, SetOptions(merge: true));
   }
 
   Future<void> createGroup(Group group) async {

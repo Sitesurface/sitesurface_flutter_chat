@@ -1,27 +1,26 @@
-part of '../widget/chat_handler_widget.dart';
+import 'dart:async';
 
-Future<void> showChat({
-  required BuildContext context,
-  required ChatDelegate delegate,
-  required Group group,
-}) {
-  delegate.group = group;
-  return Navigator.push(context,
-      MaterialPageRoute(builder: (context) => _ChatScreen(delegate: delegate)));
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
+import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
+import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
+import 'package:sitesurface_flutter_chat/src/utils/debouncer.dart';
+import 'package:sitesurface_flutter_chat/src/utils/locale/inherited_chat_locale.dart';
+import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 
-class _ChatScreen extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final ChatDelegate delegate;
-  const _ChatScreen({
+  const ChatScreen({
     Key? key,
     required this.delegate,
   }) : super(key: key);
 
   @override
-  State<_ChatScreen> createState() => _ChatScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<_ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> {
   final _chatController = ChatController.instance;
   late Group group;
   User? user;
@@ -66,6 +65,13 @@ class _ChatScreenState extends State<_ChatScreen> {
   @override
   Widget build(BuildContext context) {
     var brightness = Theme.of(context).brightness;
+    if (!group.users.contains(_chatController.userId)) {
+      return const Scaffold(
+        body: Center(
+          child: Text("Unauthorized!!! . Kindly restart your app"),
+        ),
+      );
+    }
     return InheritedChatTheme(
       theme: widget.delegate.chatTheme(),
       child: InheritedL10n(

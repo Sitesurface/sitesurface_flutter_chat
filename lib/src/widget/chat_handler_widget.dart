@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
@@ -9,12 +8,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as ln;
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
-import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
-import 'package:sitesurface_flutter_chat/src/utils/debouncer.dart';
-import 'package:sitesurface_flutter_chat/src/utils/locale/inherited_chat_locale.dart';
-import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
 
-part '../views/chat.dart';
+import '../views/chat_screen.dart';
 
 class ChatHandler extends StatefulWidget {
   final Widget child;
@@ -146,7 +141,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => _ChatScreen(delegate: widget.chatDelegate),
+          builder: (context) => ChatScreen(delegate: widget.chatDelegate),
         ),
       );
     } catch (e) {

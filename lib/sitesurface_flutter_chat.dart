@@ -10,3 +10,4 @@ export 'src/models/latlng/latlng.dart';
 export 'src/widget/unread_message_count_widget.dart';
 export 'src/utils/theme/chat_theme.dart';
 export 'src/utils/locale/chat_l10n.dart';
+export 'src/controllers/start_chat.dart';

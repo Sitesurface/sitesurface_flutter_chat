@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 import 'package:sitesurface_flutter_chat/src/utils/try_parse.dart';
+import 'package:sitesurface_flutter_chat/src/views/chat_screen.dart';
 
 import '../enums/message_type.dart';
 
@@ -98,10 +99,12 @@ class _ChatListWidgetState extends State<ChatListWidget> {
 
                     return GestureDetector(
                       onTap: () {
-                        showChat(
-                            context: context,
-                            delegate: widget.delegate,
-                            group: group);
+                        widget.delegate.group = group;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ChatScreen(delegate: widget.delegate)));
                       },
                       child: AbsorbPointer(
                         absorbing: true,

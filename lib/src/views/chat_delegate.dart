@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
+import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 import 'package:sitesurface_flutter_chat/src/helpers/image_helper.dart';
 
 import '../widget/chat_bottom_widget.dart';
@@ -68,4 +69,17 @@ abstract class ChatDelegate<T> {
   Future<File?> getCameraImage();
   Future<File?> getGalleryImage();
   Future<SfcLatLng?> getCurrentLocation(BuildContext context);
+
+  Future<void> updateUserData(
+      {String? name, String? profilePic, Map<String, dynamic>? data}) async {
+    var chatController = ChatController.instance;
+    await chatController.updateUserData(
+        name: name, profilePic: profilePic, data: data);
+  }
+
+  Future<void> updateGroupData(
+      {required Map<String, dynamic> data, required Group group}) async {
+    var chatController = ChatController.instance;
+    await chatController.updateGroupData(data: data, group: group);
+  }
 }
