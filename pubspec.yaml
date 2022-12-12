@@ -1,7 +1,8 @@
 name: sitesurface_flutter_chat
 description: A new Flutter package project.
 version: 0.0.1
-homepage: https://github.com/Sitesurface/sitesurface_flutter_chat
+homepage: https://sitesurface.com
+repository: https://github.com/Sitesurface/sitesurface_flutter_chat
 
 environment:
   sdk: '>=2.18.2 <3.0.0'

@@ -10,7 +10,9 @@ import 'package:sitesurface_flutter_chat/src/views/chat_screen.dart';
 
 import '../enums/message_type.dart';
 
+/// This widget shows list of all active chats . User can click on the chat and will be pushed to chatting page.
 class ChatListWidget extends StatefulWidget {
+  /// Chat Delegate
   final ChatDelegate delegate;
   const ChatListWidget({
     super.key,
@@ -18,8 +20,12 @@ class ChatListWidget extends StatefulWidget {
     required this.delegate,
     this.noChatFound,
   });
+
+  /// Pass your custom widget to build your own UI.
   final Widget Function(BuildContext context, User user, bool isTyping,
       Group group, int index)? builder;
+
+  /// Pass widget to be displayed when there are no chats
   final Widget? noChatFound;
   @override
   State<ChatListWidget> createState() => _ChatListWidgetState();

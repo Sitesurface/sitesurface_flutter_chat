@@ -11,14 +11,40 @@ import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 
 import '../views/chat_screen.dart';
 
+/// Wrap your widget with this widget and pass the required parameter [userId] to get started.
+/// If you are using the default widgets i.e., you have not overidden any UI in [ChatDelegate] then it is
+/// required to pass [name] and [profilePic].
 class ChatHandler extends StatefulWidget {
+  /// child widget
   final Widget child;
+
+  /// [chatDelegate] which needs to be used for this widget
+  /// extend [ChatDelegate] and pass that class here
   final ChatDelegate chatDelegate;
+
+  /// Unique id of currently logged in user
+  /// Important: this widget should not be used if user is not logged in
   final String userId;
+
+  /// Name of the currently logged in user. [name] is displayed in notification and appbar titles by default
   final String? name;
+
+  /// Profile pic of the currently logged in user. It is displayed in the chats list and chatting page by default
   final String? profilePic;
+
+  /// Pass any extra data which you want to save. You will get this data back in all the callbacks where you get
+  /// [User] object
   final Map<String, dynamic>? data;
+
+  /// FCM Server key of your firebase project to send push notifications. This package currently uses legacy api to send
+  /// notifications so kindly enable that in your project to get key.
   final String? fcmServerKey;
+
+  /// You can pass your own custom function to get current time of user. This object of [DateTime] is used internally
+  /// by the package to save timestamps for many documents which is used while querying.
+  /// By default it is retrieved using [DateTime.now().millisecondsSinceEpoch] .
+  /// But it is advised passing your own function which uses your own custom server to get time as if user changes time
+  /// on his device it can mess up the chats.
   final Future<DateTime> Function()? getCurrentTimeUserDefined;
 
   const ChatHandler({

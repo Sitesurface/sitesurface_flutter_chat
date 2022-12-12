@@ -4,9 +4,16 @@ part 'latlng.freezed.dart';
 part 'latlng.g.dart';
 
 @freezed
+
+/// class for saving coordinated
 class SfcLatLng with _$SfcLatLng {
   factory SfcLatLng(
-      {required final double latitude,
+      {
+
+      /// latitude of user
+      required final double latitude,
+
+      /// longitude of user
       required final double longitude}) = _SfcLatLng;
 
   factory SfcLatLng.fromJson(Map<String, dynamic> json) =>

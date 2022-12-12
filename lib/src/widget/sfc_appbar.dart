@@ -6,9 +6,15 @@ import '../utils/datetime_utils.dart';
 import '../utils/locale/inherited_chat_locale.dart';
 import '../utils/theme/inherited_chat_theme.dart';
 
+/// Default app bar which is displayed in chatting page. You can override [chatAppbarBuilder] in [ChatDelegate] and
+/// return [SfcAppBar] with your own custom [actions].
 class SfcAppBar extends StatelessWidget {
   final List<Widget> actions;
+
+  /// recepient user
   final User? user;
+
+  /// whether recepient user is currently typing or not
   final bool isTyping;
   const SfcAppBar(
       {super.key, required this.actions, this.user, required this.isTyping});
