@@ -7,7 +7,6 @@ import 'package:sitesurface_flutter_chat/src/helpers/image_helper.dart';
 
 import '../widget/chat_bottom_widget.dart';
 import '../widget/message_item.dart';
-import '../widget/sfc_appbar.dart';
 
 abstract class ChatDelegate<T> {
   Group? group;
@@ -41,7 +40,7 @@ abstract class ChatDelegate<T> {
         listMessage: listMessage);
   }
 
-  Widget chatAppbarBuilder(User? user, bool isTyping) {
+  Widget chatAppbarBuilder(User? user, bool isTyping, Group group) {
     return SfcAppBar(
       user: user,
       isTyping: isTyping,

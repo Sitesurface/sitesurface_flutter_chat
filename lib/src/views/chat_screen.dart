@@ -84,7 +84,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 stream: _chatController.getGroupUserStream(group),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return widget.delegate.chatAppbarBuilder(null, false);
+                    return widget.delegate
+                        .chatAppbarBuilder(null, false, group);
                   }
                   try {
                     user = User.fromJson(
@@ -93,10 +94,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     debugPrint(e.toString());
                   }
                   if (user == null) {
-                    return widget.delegate.chatAppbarBuilder(null, false);
+                    return widget.delegate
+                        .chatAppbarBuilder(null, false, group);
                   }
                   var isTyping = group.id == user!.typingGroup;
-                  return widget.delegate.chatAppbarBuilder(user!, isTyping);
+                  return widget.delegate
+                      .chatAppbarBuilder(user!, isTyping, group);
                 },
               ),
               Expanded(
