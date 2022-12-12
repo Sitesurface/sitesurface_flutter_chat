@@ -48,30 +48,7 @@ class MessageItem extends StatelessWidget {
       }
     }
 
-    bool isToday(int index) {
-      DateTime today = DateTime.now();
-      DateTime curr = DateTime.fromMillisecondsSinceEpoch(
-          int.parse(listMessage[index].timestamp));
-      if (curr.day == today.day) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    bool isYesterday(int index) {
-      DateTime today = DateTime.now();
-      DateTime curr = DateTime.fromMillisecondsSinceEpoch(
-          int.parse(listMessage[index].timestamp));
-      if (curr.day == (today.day - 1)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
     final theme = InheritedChatTheme.of(context).theme;
-    final l10n = InheritedL10n.of(context).l10n;
 
     return Container(
       alignment: Alignment.center,

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
 import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';

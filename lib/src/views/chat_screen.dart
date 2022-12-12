@@ -281,7 +281,7 @@ class _ChatScreenState extends State<ChatScreen> {
       var newMessage = Message.fromJson(data.docs.first.data());
       if (newMessage.idFrom == _chatController.userId) return;
       if (messageNotifier.value.contains(newMessage)) return;
-      // TODO : Check if this assignment is expensive and fix it if it is
+      // TODO Check if this assignment is expensive and fix it if it is
       messageNotifier.value =
           <Message>{newMessage, ...messageNotifier.value}.toList();
     });
