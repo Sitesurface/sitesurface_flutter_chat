@@ -19,16 +19,18 @@ class ChatHandler extends StatefulWidget {
   final String? profilePic;
   final Map<String, dynamic>? data;
   final String? fcmServerKey;
+  final Future<DateTime> Function()? getCurrentTimeUserDefined;
 
   const ChatHandler({
     Key? key,
     required this.child,
-    required this.userId,
     required this.chatDelegate,
-    required this.data,
+    required this.userId,
     this.name,
     this.profilePic,
+    required this.data,
     this.fcmServerKey,
+    this.getCurrentTimeUserDefined,
   }) : super(key: key);
 
   @override
@@ -79,7 +81,8 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
         userId: widget.userId,
         data: widget.data,
         name: widget.name,
-        profilePic: widget.profilePic);
+        profilePic: widget.profilePic,
+        getCurrentTimeUserDefined: widget.getCurrentTimeUserDefined);
     initMain();
     WidgetsBinding.instance.addObserver(this);
     child = widget.child;

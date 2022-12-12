@@ -33,7 +33,7 @@ class MessageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isNewMsg(int index) {
       if (index == (listMessage.length - 1)) {
-        return true;
+        return false;
       }
       DateTime curr = DateTime.fromMillisecondsSinceEpoch(
           int.parse(listMessage[index].timestamp));

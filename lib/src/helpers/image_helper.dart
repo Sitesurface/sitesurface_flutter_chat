@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
 
 class ImageHelper {
   Future<String?> uploadImageFile(File imageFile) async {
     String? url;
     try {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      String fileName = await ChatController.instance.getCurrentTimestamp();
       Reference storageReference =
           FirebaseStorage.instance.ref().child("chat").child(fileName);
 

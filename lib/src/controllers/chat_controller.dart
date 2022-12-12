@@ -20,6 +20,7 @@ class ChatController {
   final _messageCollection = FirebaseFirestore.instance.collection("messages");
 
   String? activeChatScreen;
+  Future<DateTime> Function()? getCurrentTimeUserDefined;
 
   String? _userId;
   String? fcmServerKey;
@@ -37,8 +38,10 @@ class ChatController {
       String? fcmServerKey,
       String? name,
       String? profilePic,
-      Map<String, dynamic>? data}) async {
+      Map<String, dynamic>? data,
+      Future<DateTime> Function()? getCurrentTimeUserDefined}) async {
     this.fcmServerKey = fcmServerKey;
+    this.getCurrentTimeUserDefined = getCurrentTimeUserDefined;
     _userId = userId;
     var fcmToken = await FirebaseMessaging.instance.getToken();
     var userDoc = await _userCollection.doc(_userId).get();
@@ -140,8 +143,7 @@ class ChatController {
     checkUserId();
     if (_userId == null) return;
     var newGroup = group.copyWith(
-        timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
-        unreadMessageCount: 0);
+        timestamp: await getCurrentTimestamp(), unreadMessageCount: 0);
     await _groupCollection
         .doc(group.id)
         .set(newGroup.toJson(), SetOptions(merge: true));
@@ -311,7 +313,7 @@ class ChatController {
     checkUserId();
     try {
       if (_userId == null) return;
-      String currTime = DateTime.now().millisecondsSinceEpoch.toString();
+      String currTime = await getCurrentTimestamp();
       if (message.content.trim().isEmpty) return;
       var tempGroup = await getGroup(group.id);
       if (tempGroup != null) group = tempGroup;
@@ -343,7 +345,7 @@ class ChatController {
   Future<void> setUserState(bool isActive) async {
     checkUserId();
     try {
-      String currTime = DateTime.now().millisecondsSinceEpoch.toString();
+      String currTime = await getCurrentTimestamp();
       var userDoc = await _userCollection.doc(_userId).get();
       var user = User.fromJson(userDoc.data() ?? {});
       await updateUser(user.copyWith(lastSeen: currTime, isActive: isActive));
@@ -376,5 +378,14 @@ class ChatController {
 
   void checkUserId() {
     if (_userId == null) throw Exception("userId is not initialised");
+  }
+
+  Future<String> getCurrentTimestamp() async {
+    if (getCurrentTimeUserDefined == null) {
+      return DateTime.now().millisecondsSinceEpoch.toString();
+    } else {
+      var currentDate = await getCurrentTimeUserDefined!();
+      return currentDate.toUtc().millisecondsSinceEpoch.toString();
+    }
   }
 }

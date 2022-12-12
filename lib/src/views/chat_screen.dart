@@ -162,9 +162,9 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _onSendTapped(String text) {
+  void _onSendTapped(String text) async {
     if (user == null) return;
-    String currTime = DateTime.now().millisecondsSinceEpoch.toString();
+    String currTime = await _chatController.getCurrentTimestamp();
     var message = Message(
         content: text,
         idFrom: _chatController.userId ?? "",
@@ -189,7 +189,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (image == null) return;
 
     // adding local image while the image uploads
-    String currTime = DateTime.now().millisecondsSinceEpoch.toString();
+    String currTime = await _chatController.getCurrentTimestamp();
     var message = Message(
         type: MessageType.image,
         content: image.path,
@@ -215,7 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (image == null) return;
 
     // adding local image while the image uploads
-    String currTime = DateTime.now().millisecondsSinceEpoch.toString();
+    String currTime = await _chatController.getCurrentTimestamp();
     var message = Message(
         type: MessageType.image,
         content: image.path,
@@ -242,7 +242,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (latlng == null) return;
 
     // adding local location
-    String currTime = DateTime.now().millisecondsSinceEpoch.toString();
+    String currTime = await _chatController.getCurrentTimestamp();
     var message = Message(
         type: MessageType.location,
         content: "${latlng.latitude},${latlng.longitude}",
