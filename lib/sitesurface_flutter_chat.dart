@@ -12,3 +12,4 @@ export 'src/utils/theme/chat_theme.dart';
 export 'src/utils/locale/chat_l10n.dart';
 export 'src/controllers/start_chat.dart';
 export 'src/widget/sfc_appbar.dart';
+export 'src/enums/message_type.dart';
