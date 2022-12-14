@@ -85,7 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return widget.delegate
-                        .chatAppbarBuilder(null, false, group);
+                        .chatAppbarBuilder(context, null, false, group);
                   }
                   try {
                     user = User.fromJson(
@@ -95,11 +95,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                   if (user == null) {
                     return widget.delegate
-                        .chatAppbarBuilder(null, false, group);
+                        .chatAppbarBuilder(context, null, false, group);
                   }
                   var isTyping = group.id == user!.typingGroup;
                   return widget.delegate
-                      .chatAppbarBuilder(user!, isTyping, group);
+                      .chatAppbarBuilder(context, user!, isTyping, group);
                 },
               ),
               Expanded(

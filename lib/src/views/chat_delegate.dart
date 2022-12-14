@@ -47,7 +47,8 @@ abstract class ChatDelegate {
   }
 
   /// Appbar in chatting page
-  Widget chatAppbarBuilder(User? user, bool isTyping, Group group) {
+  Widget chatAppbarBuilder(
+      BuildContext context, User? user, bool isTyping, Group group) {
     return SfcAppBar(
       user: user,
       isTyping: isTyping,
