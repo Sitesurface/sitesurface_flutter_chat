@@ -40,6 +40,8 @@ class ChatHandler extends StatefulWidget {
   /// notifications so kindly enable that in your project to get key.
   final String? fcmServerKey;
 
+  final String notificationIconPath;
+
   /// You can pass your own custom function to get current time of user. This object of [DateTime] is used internally
   /// by the package to save timestamps for many documents which is used while querying.
   /// By default it is retrieved using [DateTime.now().millisecondsSinceEpoch] .
@@ -47,17 +49,18 @@ class ChatHandler extends StatefulWidget {
   /// on his device it can mess up the chats.
   final Future<DateTime> Function()? getCurrentTimeUserDefined;
 
-  const ChatHandler({
-    Key? key,
-    required this.child,
-    required this.chatDelegate,
-    required this.userId,
-    this.name,
-    this.profilePic,
-    this.data,
-    this.fcmServerKey,
-    this.getCurrentTimeUserDefined,
-  }) : super(key: key);
+  const ChatHandler(
+      {Key? key,
+      required this.child,
+      required this.chatDelegate,
+      required this.userId,
+      this.name,
+      this.profilePic,
+      this.data,
+      this.fcmServerKey,
+      this.getCurrentTimeUserDefined,
+      this.notificationIconPath = '@mipmap/ic_launcher'})
+      : super(key: key);
 
   @override
   State createState() => ChatHandlerState();
@@ -125,7 +128,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
               channel.id,
               channel.name,
               color: Colors.blue,
-              icon: '@mipmap/ic_launcher',
+              icon: widget.notificationIconPath,
             ),
           ),
           payload: jsonEncode(message.data));
@@ -191,8 +194,8 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
       sound: true,
     );
 
-    const initializationSettingsAndroid =
-        ln.AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsAndroid =
+        ln.AndroidInitializationSettings(widget.notificationIconPath);
 
     ln.DarwinInitializationSettings initializationSettingsIOS =
         ln.DarwinInitializationSettings(
