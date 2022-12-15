@@ -277,13 +277,15 @@ class _ChatScreenState extends State<ChatScreen> {
   void _addListeners() {
     _messageSubscription =
         _chatController.getNewMessages(group.id).listen((data) {
-      _chatController.resetUnreadMessages(group.id);
-      var newMessage = Message.fromJson(data.docs.first.data());
-      if (newMessage.idFrom == _chatController.userId) return;
-      if (messageNotifier.value.contains(newMessage)) return;
-      // TODO Check if this assignment is expensive and fix it if it is
-      messageNotifier.value =
-          <Message>{newMessage, ...messageNotifier.value}.toList();
+      try {
+        _chatController.resetUnreadMessages(group.id);
+        var newMessage = Message.fromJson(data.docs.first.data());
+        if (newMessage.idFrom == _chatController.userId) return;
+        if (messageNotifier.value.contains(newMessage)) return;
+        // TODO Check if this assignment is expensive and fix it if it is
+        messageNotifier.value =
+            <Message>{newMessage, ...messageNotifier.value}.toList();
+      } catch (e) {}
     });
     _scrollController.addListener(() {
       var height = MediaQuery.of(context).size.height;

@@ -54,7 +54,7 @@ class ChatHandler extends StatefulWidget {
     required this.userId,
     this.name,
     this.profilePic,
-    required this.data,
+    this.data,
     this.fcmServerKey,
     this.getCurrentTimeUserDefined,
   }) : super(key: key);
@@ -125,7 +125,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
               channel.id,
               channel.name,
               color: Colors.blue,
-              icon: '@mipmap/launcher_icon',
+              icon: '@mipmap/ic_launcher',
             ),
           ),
           payload: jsonEncode(message.data));
@@ -192,7 +192,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
     );
 
     const initializationSettingsAndroid =
-        ln.AndroidInitializationSettings('@mipmap/launcher_icon');
+        ln.AndroidInitializationSettings('@mipmap/ic_launcher');
 
     ln.DarwinInitializationSettings initializationSettingsIOS =
         ln.DarwinInitializationSettings(
