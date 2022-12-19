@@ -38,12 +38,12 @@ class SfcAppBar extends StatelessWidget {
         centerTitle: false,
         title: title ??
             () {
-              if (user == null) return SizedBox();
+              if (user == null) return const SizedBox();
               return Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(user?.profilePic ?? ""),
+                    backgroundImage: NetworkImage(user?.profilePic ?? ''),
                   ),
                   const SizedBox(
                     width: 8,
@@ -54,7 +54,7 @@ class SfcAppBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          user?.name ?? "",
+                          user?.name ?? '',
                           style: theme.appbarNameStyle,
                         ),
                         () {
@@ -67,10 +67,10 @@ class SfcAppBar extends StatelessWidget {
                             return Text(l10n.onlineLabel,
                                 style: theme.appBarOnlineStyle);
                           } else {
-                            var lastSeenDate =
+                            final lastSeenDate =
                                 DateTime.fromMillisecondsSinceEpoch(
-                                    int.parse(user?.lastSeen ?? ""));
-                            var lastSeen =
+                                    int.parse(user?.lastSeen ?? ''));
+                            final lastSeen =
                                 "${l10n.lastSeenLabel} ${lastSeenDateFormat(lastSeenDate, context)}, ${DateFormat("hh:mm aa").format(lastSeenDate)}";
                             return Text(lastSeen, style: theme.lastSeenStyle);
                           }

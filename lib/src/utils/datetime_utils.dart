@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sitesurface_flutter_chat/src/utils/locale/inherited_chat_locale.dart';
 
 import '../../sitesurface_flutter_chat.dart';
+import 'locale/inherited_chat_locale.dart';
 
 extension DateTimeUtils on DateTime {
   bool isToday() {
@@ -20,8 +20,8 @@ extension DateTimeUtils on DateTime {
 
 String lastSeenDateFormat(DateTime dateTime, BuildContext context) {
   try {
-    var l10n = InheritedL10n.of(context).l10n;
-    String output = DateFormat("dd MMMM").format(dateTime);
+    final l10n = InheritedL10n.of(context).l10n;
+    var output = DateFormat('dd MMMM').format(dateTime);
     if (dateTime.isToday()) {
       output = l10n.todayLabel.toLowerCase();
     } else if (dateTime.isYesterday()) {
@@ -30,14 +30,14 @@ String lastSeenDateFormat(DateTime dateTime, BuildContext context) {
     return output;
   } catch (e) {
     debugPrint(e.toString());
-    return "";
+    return '';
   }
 }
 
 String dateSeparatorFormat(DateTime dateTime, BuildContext context) {
   try {
-    var l10n = InheritedL10n.of(context).l10n;
-    String output = DateFormat("dd MMMM y").format(dateTime);
+    final l10n = InheritedL10n.of(context).l10n;
+    var output = DateFormat('dd MMMM y').format(dateTime);
     if (dateTime.isToday()) {
       output = l10n.todayLabel;
     } else if (dateTime.isYesterday()) {
@@ -46,15 +46,15 @@ String dateSeparatorFormat(DateTime dateTime, BuildContext context) {
     return output;
   } catch (e) {
     debugPrint(e.toString());
-    return "";
+    return '';
   }
 }
 
 String chatWidgetDateFormat(DateTime dateTime, ChatL10n l10n) {
   try {
-    String output = DateFormat("dd/MM/yy").format(dateTime);
+    var output = DateFormat('dd/MM/yy').format(dateTime);
     if (dateTime.isToday()) {
-      output = DateFormat("hh:mm aa").format(dateTime);
+      output = DateFormat('hh:mm aa').format(dateTime);
     } else if (dateTime.isYesterday()) {
       output = l10n.yesterdayLabel[0].toUpperCase() +
           l10n.yesterdayLabel.substring(1).toLowerCase();
@@ -62,6 +62,6 @@ String chatWidgetDateFormat(DateTime dateTime, ChatL10n l10n) {
     return output;
   } catch (e) {
     debugPrint(e.toString());
-    return "";
+    return '';
   }
 }

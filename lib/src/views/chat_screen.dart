@@ -2,19 +2,18 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
-import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
-import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
-import 'package:sitesurface_flutter_chat/src/utils/debouncer.dart';
-import 'package:sitesurface_flutter_chat/src/utils/locale/inherited_chat_locale.dart';
-import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
+import '../../sitesurface_flutter_chat.dart';
+import '../controllers/chat_controller.dart';
+import '../utils/debouncer.dart';
+import '../utils/locale/inherited_chat_locale.dart';
+import '../utils/theme/inherited_chat_theme.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatDelegate delegate;
   const ChatScreen({
-    Key? key,
+    super.key,
     required this.delegate,
-  }) : super(key: key);
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -39,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     group = widget.delegate.group!;
     _chatController.activeChatScreen = group.id;
-    currentUser = User(id: _chatController.userId ?? "");
+    currentUser = User(id: _chatController.userId ?? '');
     _chatController.currentUser().then((value) {
       currentUser = value;
     });
@@ -48,11 +47,12 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
   }
 
-  getMessages() async {
-    var data = await _chatController.getInitialMessages(group.id, lastDocument);
+  void getMessages() async {
+    final data =
+        await _chatController.getInitialMessages(group.id, lastDocument);
     if (data.docs.isNotEmpty) {
       lastDocument = data.docs.last;
-      var tempMessageList = <Message>[];
+      final tempMessageList = <Message>[];
       for (var messageSnapshot in data.docs) {
         tempMessageList.add(Message.fromJson(messageSnapshot.data()));
       }
@@ -64,11 +64,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var brightness = Theme.of(context).brightness;
+    final brightness = Theme.of(context).brightness;
     if (!group.users.contains(_chatController.userId)) {
       return const Scaffold(
         body: Center(
-          child: Text("Unauthorized!!! . Kindly restart your app"),
+          child: Text('Unauthorized!!! . Kindly restart your app'),
         ),
       );
     }
@@ -97,7 +97,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     return widget.delegate
                         .chatAppbarBuilder(context, null, false, group);
                   }
-                  var isTyping = group.id == user!.typingGroup;
+                  final isTyping = group.id == user!.typingGroup;
                   return widget.delegate
                       .chatAppbarBuilder(context, user!, isTyping, group);
                 },
@@ -105,51 +105,47 @@ class _ChatScreenState extends State<ChatScreen> {
               Expanded(
                 child: ValueListenableBuilder<List<Message>>(
                   valueListenable: messageNotifier,
-                  builder: (context, value, _) {
-                    return Stack(
-                      children: [
-                        ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.all(10),
-                          itemCount: value.length,
-                          reverse: true,
-                          controller: _scrollController,
-                          itemBuilder: (context, index) => widget.delegate
-                              .chatMessageBuilder(context, index, value[index],
-                                  _chatController.userId!, value),
-                        ),
-                        Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: ValueListenableBuilder(
-                              valueListenable: showGoToBottom,
-                              builder: (context, value, _) {
-                                if (value) {
-                                  return IconButton(
-                                      onPressed: () {
-                                        _scrollController.jumpTo(0.0);
-                                      },
-                                      icon: Container(
-                                          padding: const EdgeInsets.all(4),
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  brightness == Brightness.dark
-                                                      ? Colors.grey
-                                                          .withOpacity(0.85)
-                                                      : Colors.white
-                                                          .withOpacity(0.85),
-                                              shape: BoxShape.circle),
-                                          child: widget.delegate
-                                              .chatTheme()
-                                              .goToBottomButtonIcon));
-                                } else {
-                                  return const SizedBox();
-                                }
-                              },
-                            ))
-                      ],
-                    );
-                  },
+                  builder: (context, value, _) => Stack(
+                    children: [
+                      ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.all(10),
+                        itemCount: value.length,
+                        reverse: true,
+                        controller: _scrollController,
+                        itemBuilder: (context, index) => widget.delegate
+                            .chatMessageBuilder(context, index, value[index],
+                                _chatController.userId!, value),
+                      ),
+                      Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: ValueListenableBuilder(
+                            valueListenable: showGoToBottom,
+                            builder: (context, value, _) {
+                              if (value) {
+                                return IconButton(
+                                    onPressed: () {
+                                      _scrollController.jumpTo(0.0);
+                                    },
+                                    icon: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                            color: brightness == Brightness.dark
+                                                ? Colors.grey.withOpacity(0.85)
+                                                : Colors.white
+                                                    .withOpacity(0.85),
+                                            shape: BoxShape.circle),
+                                        child: widget.delegate
+                                            .chatTheme()
+                                            .goToBottomButtonIcon));
+                              } else {
+                                return const SizedBox();
+                              }
+                            },
+                          ))
+                    ],
+                  ),
                 ),
               ),
               widget.delegate.chatBottomBuilder(
@@ -167,95 +163,95 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _onSendTapped(String text) async {
     if (user == null) return;
-    String currTime = await _chatController.getCurrentTimestamp();
-    var message = Message(
+    final currTime = await _chatController.getCurrentTimestamp();
+    final message = Message(
         content: text,
-        idFrom: _chatController.userId ?? "",
+        idFrom: _chatController.userId ?? '',
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
     messageNotifier.value = [message, ...messageNotifier.value];
-    _scrollController.animateTo(0.0,
+    await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    _chatController.sendMessage(
+    await _chatController.sendMessage(
         message: message,
         group: group,
         notificationTitle:
             widget.delegate.notificationTitle(group, currentUser!));
     textEditingController.clear();
-    _chatController.updateTyping(null);
+    await _chatController.updateTyping(null);
   }
 
-  _onCameraPressed() async {
-    var navigator = Navigator.of(context);
-    var image = await widget.delegate.getCameraImage();
+  Future<void> _onCameraPressed() async {
+    final navigator = Navigator.of(context);
+    final image = await widget.delegate.getCameraImage();
     navigator.pop();
     if (image == null) return;
 
     // adding local image while the image uploads
-    String currTime = await _chatController.getCurrentTimestamp();
-    var message = Message(
+    final currTime = await _chatController.getCurrentTimestamp();
+    final message = Message(
         type: MessageType.image,
         content: image.path,
-        idFrom: _chatController.userId ?? "",
+        idFrom: _chatController.userId ?? '',
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
     messageNotifier.value = [message, ...messageNotifier.value];
-    _scrollController.animateTo(0.0,
+    await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    var url = await widget.delegate.uploadImage(image);
+    final url = await widget.delegate.uploadImage(image);
     if (url == null) return;
-    _chatController.sendMessage(
+    await _chatController.sendMessage(
         message: message.copyWith(content: url),
         group: group,
         notificationTitle:
             widget.delegate.notificationTitle(group, currentUser!));
   }
 
-  _onGalleryPressed() async {
-    var navigator = Navigator.of(context);
-    var image = await widget.delegate.getGalleryImage();
+  Future<void> _onGalleryPressed() async {
+    final navigator = Navigator.of(context);
+    final image = await widget.delegate.getGalleryImage();
     navigator.pop();
     if (image == null) return;
 
     // adding local image while the image uploads
-    String currTime = await _chatController.getCurrentTimestamp();
-    var message = Message(
+    final currTime = await _chatController.getCurrentTimestamp();
+    final message = Message(
         type: MessageType.image,
         content: image.path,
-        idFrom: _chatController.userId ?? "",
+        idFrom: _chatController.userId ?? '',
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
     messageNotifier.value = [message, ...messageNotifier.value];
-    _scrollController.animateTo(0.0,
+    await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    var url = await widget.delegate.uploadImage(image);
+    final url = await widget.delegate.uploadImage(image);
     if (url == null) return;
-    _chatController.sendMessage(
+    await _chatController.sendMessage(
         message: message.copyWith(content: url),
         group: group,
         notificationTitle:
             widget.delegate.notificationTitle(group, currentUser!));
   }
 
-  _onLocationPressed(BuildContext context) async {
-    var navigator = Navigator.of(context);
-    var latlng = await widget.delegate.getCurrentLocation(context);
+  Future<void> _onLocationPressed(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final latlng = await widget.delegate.getCurrentLocation(context);
     navigator.pop();
 
     if (latlng == null) return;
 
     // adding local location
-    String currTime = await _chatController.getCurrentTimestamp();
-    var message = Message(
+    final currTime = await _chatController.getCurrentTimestamp();
+    final message = Message(
         type: MessageType.location,
-        content: "${latlng.latitude},${latlng.longitude}",
-        idFrom: _chatController.userId ?? "",
+        content: '${latlng.latitude},${latlng.longitude}',
+        idFrom: _chatController.userId ?? '',
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
     messageNotifier.value = [message, ...messageNotifier.value];
-    _scrollController.animateTo(0.0,
+    await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    _chatController.sendMessage(
+    await _chatController.sendMessage(
         message: message,
         group: group,
         notificationTitle:
@@ -279,16 +275,18 @@ class _ChatScreenState extends State<ChatScreen> {
         _chatController.getNewMessages(group.id).listen((data) {
       try {
         _chatController.resetUnreadMessages(group.id);
-        var newMessage = Message.fromJson(data.docs.first.data());
+        final newMessage = Message.fromJson(data.docs.first.data());
         if (newMessage.idFrom == _chatController.userId) return;
         if (messageNotifier.value.contains(newMessage)) return;
         // TODO Check if this assignment is expensive and fix it if it is
         messageNotifier.value =
             <Message>{newMessage, ...messageNotifier.value}.toList();
-      } catch (e) {}
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     });
     _scrollController.addListener(() {
-      var height = MediaQuery.of(context).size.height;
+      final height = MediaQuery.of(context).size.height;
       if (_scrollController.offset >= height) {
         showGoToBottom.value = true;
       } else {

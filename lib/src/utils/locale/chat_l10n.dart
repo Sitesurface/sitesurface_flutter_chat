@@ -59,16 +59,16 @@ abstract class ChatL10n {
 
 class EnChatL10n extends ChatL10n {
   const EnChatL10n(
-      {super.onlineLabel = "Online",
-      super.lastSeenLabel = "last seen",
-      super.typingLabel = "Typing....",
-      super.yesterdayLabel = "YESTERDAY",
-      super.todayLabel = "TODAY",
-      super.cameraAttachmentLabel = "Camera",
-      super.galleryAttachmentLabel = "Gallery",
-      super.locationAttachmentLabel = "Location",
-      super.messageInputHint = "Message",
-      super.sharedImageLabel = "Shared image",
-      super.sharedLocationLabel = "Shared location",
-      super.noChatMessagesLabel = "No chats found"});
+      {super.onlineLabel = 'Online',
+      super.lastSeenLabel = 'last seen',
+      super.typingLabel = 'Typing....',
+      super.yesterdayLabel = 'YESTERDAY',
+      super.todayLabel = 'TODAY',
+      super.cameraAttachmentLabel = 'Camera',
+      super.galleryAttachmentLabel = 'Gallery',
+      super.locationAttachmentLabel = 'Location',
+      super.messageInputHint = 'Message',
+      super.sharedImageLabel = 'Shared image',
+      super.sharedLocationLabel = 'Shared location',
+      super.noChatMessagesLabel = 'No chats found'});
 }

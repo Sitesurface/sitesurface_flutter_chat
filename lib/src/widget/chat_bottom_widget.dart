@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
+
 import '../utils/locale/inherited_chat_locale.dart';
+import '../utils/theme/inherited_chat_theme.dart';
 import 'circle_icon_button.dart';
 
 class ChatBottomWidget extends StatefulWidget {
@@ -10,13 +11,13 @@ class ChatBottomWidget extends StatefulWidget {
   final void Function()? onGalleryTapped;
   final void Function(BuildContext context)? onLocationTapped;
   const ChatBottomWidget({
-    Key? key,
+    super.key,
     this.onSendTapped,
     this.onCameraTapped,
     this.onGalleryTapped,
     this.onLocationTapped,
     required this.textEditingController,
-  }) : super(key: key);
+  });
 
   @override
   State<ChatBottomWidget> createState() => _ChatBottomWidgetState();
@@ -34,8 +35,8 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var brightness = Theme.of(context).brightness;
-    var theme = InheritedChatTheme.of(context).theme;
+    final brightness = Theme.of(context).brightness;
+    final theme = InheritedChatTheme.of(context).theme;
     final l10n = InheritedL10n.of(context).l10n;
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -102,69 +103,69 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
                         backgroundColor: Colors.transparent,
                         context: context,
                         isScrollControlled: true,
-                        builder: (context) {
-                          return Container(
-                            height: 130,
-                            margin: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.grey[800]
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(16)),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    CircleIconButton(
-                                      color: theme.cameraIconBackgroundColor,
-                                      onTap: widget.onCameraTapped,
-                                      icon: theme.cameraIconIcon,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(l10n.cameraAttachmentLabel),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    CircleIconButton(
-                                      color: theme.galleryIconBackgroundColor,
-                                      onTap: widget.onGalleryTapped,
-                                      icon: theme.galleryIcon,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(l10n.galleryAttachmentLabel),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    CircleIconButton(
-                                        color:
-                                            theme.locationIconBackgroundColor,
-                                        onTap: () {
-                                          if (widget.onLocationTapped == null) {
-                                            return;
-                                          }
-                                          widget.onLocationTapped!(context);
-                                        },
-                                        icon: theme.locationIcon),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(l10n.locationAttachmentLabel),
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        });
+                        builder: (context) => Container(
+                              height: 130,
+                              margin: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.grey[800]
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(16)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    children: [
+                                      CircleIconButton(
+                                        color: theme.cameraIconBackgroundColor,
+                                        onTap: widget.onCameraTapped,
+                                        icon: theme.cameraIconIcon,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(l10n.cameraAttachmentLabel),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      CircleIconButton(
+                                        color: theme.galleryIconBackgroundColor,
+                                        onTap: widget.onGalleryTapped,
+                                        icon: theme.galleryIcon,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(l10n.galleryAttachmentLabel),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      CircleIconButton(
+                                          color:
+                                              theme.locationIconBackgroundColor,
+                                          onTap: () {
+                                            if (widget.onLocationTapped ==
+                                                null) {
+                                              return;
+                                            }
+                                            widget.onLocationTapped!(context);
+                                          },
+                                          icon: theme.locationIcon),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(l10n.locationAttachmentLabel),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ));
                   },
                   icon: theme.attachmentIcon)
             else

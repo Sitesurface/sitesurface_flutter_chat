@@ -19,7 +19,7 @@ enum BubbleNip {
 
 class Bubble extends StatelessWidget {
   Bubble({
-    Key? key,
+    super.key,
     this.child,
     Radius? radius,
     bool? showNip,
@@ -67,8 +67,7 @@ class Bubble extends StatelessWidget {
             right: padding?.right ?? style?.padding?.right ?? 8,
             bottom: padding?.bottom ?? style?.padding?.bottom ?? 6,
           ),
-        ),
-        super(key: key);
+        );
 
   final Widget? child;
   final Color color;

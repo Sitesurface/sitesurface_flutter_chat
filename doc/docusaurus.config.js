@@ -1,8 +1,8 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const lightCodeTheme = require("prism-react-renderer/themes/nightOwl");
+const darkCodeTheme = require("prism-react-renderer/themes/vsDark");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -37,14 +37,14 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/Sitesurface/sitesurface_flutter_chat/tree/main/docs",
+            "https://github.com/Sitesurface/sitesurface_flutter_chat/tree/main/doc",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/Sitesurface/sitesurface_flutter_chat/tree/main/docs",
+            "https://github.com/Sitesurface/sitesurface_flutter_chat/tree/main/doc",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -120,6 +120,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        additionalLanguages: ["dart"],
       },
     }),
 };

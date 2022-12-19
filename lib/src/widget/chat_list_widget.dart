@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
-import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
-import 'package:sitesurface_flutter_chat/src/utils/datetime_utils.dart';
-import 'package:sitesurface_flutter_chat/src/utils/try_parse.dart';
-import 'package:sitesurface_flutter_chat/src/views/chat_screen.dart';
 
-import '../enums/message_type.dart';
+import '../../sitesurface_flutter_chat.dart';
+import '../controllers/chat_controller.dart';
+import '../utils/datetime_utils.dart';
+import '../utils/try_parse.dart';
+import '../views/chat_screen.dart';
 
 /// This widget shows list of all active chats . User can click on the chat and will be pushed to chatting page.
 class ChatListWidget extends StatefulWidget {
@@ -46,11 +45,11 @@ class _ChatListWidgetState extends State<ChatListWidget> {
     super.initState();
   }
 
-  getGroups() async {
-    var data = await _chatController.getChats(lastDocument: lastDocument);
+  void getGroups() async {
+    final data = await _chatController.getChats(lastDocument: lastDocument);
     if (data.docs.isNotEmpty) {
       lastDocument = data.docs.last;
-      var tempGroup = <Group>[];
+      final tempGroup = <Group>[];
       for (var groupSnapshot in data.docs) {
         tempGroup.add(Group.fromJson(groupSnapshot.data()));
       }
@@ -61,8 +60,8 @@ class _ChatListWidgetState extends State<ChatListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = widget.delegate.chatTheme();
-    var l10n = widget.delegate.chatL10n();
+    final theme = widget.delegate.chatTheme();
+    final l10n = widget.delegate.chatL10n();
     return ValueListenableBuilder<List<Group>?>(
       valueListenable: groupNotifier,
       builder: (context, data, _) {
@@ -98,10 +97,10 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                       _chatController.getRecepientFromGroup(group)),
                   builder: (context, userSnapshot) {
                     if (!userSnapshot.hasData) return const SizedBox();
-                    var user = tryParse<User>(User.fromJson,
+                    final user = tryParse<User>(User.fromJson,
                         userSnapshot.data!.data() as Map<String, dynamic>);
                     if (user == null) return const SizedBox();
-                    var isTyping = user.typingGroup == group.id;
+                    final isTyping = user.typingGroup == group.id;
 
                     return GestureDetector(
                       onTap: () {
@@ -127,7 +126,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                             BorderRadius.circular(20.0),
                                         clipBehavior: Clip.hardEdge,
                                         child: Image.network(
-                                          user.profilePic ?? "",
+                                          user.profilePic ?? '',
                                           errorBuilder: (_, __, ___) =>
                                               Container(),
                                           width: 40.0,
@@ -159,7 +158,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                   ),
                                 ),
                                 title: Text(
-                                  user.name ?? "",
+                                  user.name ?? '',
                                   style: theme.chatTileNameStyle,
                                 ),
                                 subtitle: isTyping
@@ -170,13 +169,13 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                     : Text(
                                         () {
                                           if (group.lastMessage == null) {
-                                            return "";
+                                            return '';
                                           }
                                           switch (group.lastMessage!.type) {
                                             case MessageType.text:
                                               return group
                                                       .lastMessage?.content ??
-                                                  "";
+                                                  '';
                                             case MessageType.image:
                                               return l10n.sharedImageLabel;
                                             case MessageType.location:
@@ -193,11 +192,11 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                     ),
                                     if (group.lastMessage != null)
                                       Text(() {
-                                        var lastMessageDate =
+                                        final lastMessageDate =
                                             DateTime.fromMillisecondsSinceEpoch(
                                           int.parse(
                                               group.lastMessage?.timestamp ??
-                                                  ""),
+                                                  ''),
                                         );
                                         return chatWidgetDateFormat(
                                             lastMessageDate, l10n);
@@ -211,7 +210,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
                                                 Theme.of(context).primaryColor),
                                         padding: const EdgeInsets.all(6),
                                         child: Text(
-                                            "${group.unreadMessageCount}",
+                                            '${group.unreadMessageCount}',
                                             style: theme
                                                 .chatTileUnreadMessageCountTextStyle),
                                       ),
@@ -238,13 +237,13 @@ class _ChatListWidgetState extends State<ChatListWidget> {
 
   void addListeners() {
     _groupSubscription = _chatController.getNewChat().listen((data) {
-      var newGroup = <Group>[];
+      final newGroup = <Group>[];
       for (var groupSnapshot in data.docChanges) {
         if (groupSnapshot.doc.data() == null) continue;
         newGroup.add(Group.fromJson(groupSnapshot.doc.data()!));
       }
 
-      var tempGroup = [...groupNotifier.value ?? []];
+      final tempGroup = [...groupNotifier.value ?? []];
       for (var group in newGroup) {
         for (var i = 0; i < tempGroup.length; i++) {
           if (tempGroup[i].id == group.id) {

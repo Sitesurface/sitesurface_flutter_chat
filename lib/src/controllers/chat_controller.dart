@@ -3,21 +3,21 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:sitesurface_flutter_chat/src/helpers/notification_helper.dart';
-import 'package:sitesurface_flutter_chat/src/models/group/group.dart';
-import 'package:sitesurface_flutter_chat/src/models/message/message.dart';
-import 'package:sitesurface_flutter_chat/src/models/user/user.dart';
 
 import '../enums/message_type.dart';
+import '../helpers/notification_helper.dart';
+import '../models/group/group.dart';
+import '../models/message/message.dart';
+import '../models/user/user.dart';
 
 class ChatController {
   static final ChatController _obj = ChatController._internal();
 
   static ChatController get instance => _obj;
 
-  final _userCollection = FirebaseFirestore.instance.collection("users");
-  final _groupCollection = FirebaseFirestore.instance.collection("groups");
-  final _messageCollection = FirebaseFirestore.instance.collection("messages");
+  final _userCollection = FirebaseFirestore.instance.collection('users');
+  final _groupCollection = FirebaseFirestore.instance.collection('groups');
+  final _messageCollection = FirebaseFirestore.instance.collection('messages');
 
   String? activeChatScreen;
   Future<DateTime> Function()? getCurrentTimeUserDefined;
@@ -25,9 +25,7 @@ class ChatController {
   String? _userId;
   String? fcmServerKey;
 
-  factory ChatController() {
-    return _obj;
-  }
+  factory ChatController() => _obj;
 
   String? get userId => _userId;
 
@@ -43,8 +41,8 @@ class ChatController {
     this.fcmServerKey = fcmServerKey;
     this.getCurrentTimeUserDefined = getCurrentTimeUserDefined;
     _userId = userId;
-    var fcmToken = await FirebaseMessaging.instance.getToken();
-    var userDoc = await _userCollection.doc(_userId).get();
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final userDoc = await _userCollection.doc(_userId).get();
     if (userDoc.exists) {
       var user = User.fromJson(userDoc.data() ?? {});
       var currentTokens = <String>[];
@@ -69,7 +67,7 @@ class ChatController {
           .set(user.toJson(), SetOptions(merge: true));
     } else {
       if (_userId == null) return;
-      var user = User(
+      final user = User(
           data: data,
           id: _userId!,
           name: name,
@@ -84,12 +82,12 @@ class ChatController {
 
   Future<void> updateUser(User user) async {
     checkUserId();
-    var userMap = user.toJson();
+    final userMap = user.toJson();
 
     // removing fields which shouldn't be updated
-    var nonEditableFields = [
-      "createdAt",
-      "id",
+    final nonEditableFields = [
+      'createdAt',
+      'id',
     ];
 
     for (var key in nonEditableFields) {
@@ -101,27 +99,27 @@ class ChatController {
 
   Future<void> updateUserData(
       {String? name, String? profilePic, Map<String, dynamic>? data}) async {
-    Map<String, dynamic> map = {};
+    final map = <String, dynamic>{};
     if (name != null) {
-      map["name"] = name;
+      map['name'] = name;
     }
     if (profilePic != null) {
-      map["profilePic"] = profilePic;
+      map['profilePic'] = profilePic;
     }
     if (data != null) {
-      map["data"] = data;
+      map['data'] = data;
     }
     await _userCollection.doc(_userId).set(map, SetOptions(merge: true));
   }
 
   Future<void> updateGroup(Group group) async {
     checkUserId();
-    var groupMap = group.toJson();
+    final groupMap = group.toJson();
 
     // removing fields which shouldn't be updated
-    var nonEditableFields = [
-      "id",
-      "users",
+    final nonEditableFields = [
+      'id',
+      'users',
     ];
 
     for (var key in nonEditableFields) {
@@ -136,13 +134,13 @@ class ChatController {
     checkUserId();
     await _groupCollection
         .doc(group.id)
-        .set({"data": data}, SetOptions(merge: true));
+        .set({'data': data}, SetOptions(merge: true));
   }
 
   Future<void> createGroup(Group group) async {
     checkUserId();
     if (_userId == null) return;
-    var newGroup = group.copyWith(
+    final newGroup = group.copyWith(
         timestamp: await getCurrentTimestamp(), unreadMessageCount: 0);
     await _groupCollection
         .doc(group.id)
@@ -161,15 +159,15 @@ class ChatController {
 
   Stream<DocumentSnapshot> getGroupUserStream(Group group) {
     checkUserId();
-    if (_userId == null) throw Exception("userId is no");
-    var recepientId = group.users.firstWhere((element) => element != _userId);
+    if (_userId == null) throw Exception('userId is no');
+    final recepientId = group.users.firstWhere((element) => element != _userId);
     return getUserStream(recepientId);
   }
 
   Future<User?> currentUser() async {
     checkUserId();
     try {
-      var userDoc = await _userCollection.doc(_userId).get();
+      final userDoc = await _userCollection.doc(_userId).get();
       return User.fromJson(userDoc.data() ?? {});
     } catch (e) {
       return null;
@@ -180,7 +178,7 @@ class ChatController {
       {QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument}) {
     checkUserId();
     var query = _groupCollection
-        .where("users", arrayContains: _userId)
+        .where('users', arrayContains: _userId)
         .limit(10)
         .orderBy('timestamp', descending: true);
     if (lastDocument != null) {
@@ -192,7 +190,7 @@ class ChatController {
   Stream<QuerySnapshot<Map<String, dynamic>>> getNewChat() {
     checkUserId();
     return _groupCollection
-        .where("users", arrayContains: _userId)
+        .where('users', arrayContains: _userId)
         .limit(10)
         .orderBy('timestamp', descending: true)
         .limit(10)
@@ -206,7 +204,7 @@ class ChatController {
     var query = _messageCollection
         .doc(groupId)
         .collection(groupId)
-        .orderBy("timestamp", descending: true)
+        .orderBy('timestamp', descending: true)
         .limit(20);
 
     if (lastDocument != null) {
@@ -218,8 +216,8 @@ class ChatController {
   Stream<QuerySnapshot<Map<String, dynamic>>> getUnreadChatsCount() {
     checkUserId();
     return _groupCollection
-        .where("unreadMessageCount", isGreaterThan: 0)
-        .where("users", arrayContains: _userId)
+        .where('unreadMessageCount', isGreaterThan: 0)
+        .where('users', arrayContains: _userId)
         .snapshots();
   }
 
@@ -229,7 +227,7 @@ class ChatController {
     return _messageCollection
         .doc(groupId)
         .collection(groupId)
-        .orderBy("timestamp", descending: true)
+        .orderBy('timestamp', descending: true)
         .limit(1)
         .snapshots();
   }
@@ -237,10 +235,10 @@ class ChatController {
   Future<void> logout() async {
     checkUserId();
     try {
-      var fcmToken = await FirebaseMessaging.instance.getToken();
-      var userDoc = await _userCollection.doc(_userId).get();
-      var user = User.fromJson(userDoc.data() ?? {});
-      var currentTokens = <String>[];
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      final userDoc = await _userCollection.doc(_userId).get();
+      final user = User.fromJson(userDoc.data() ?? {});
+      final currentTokens = <String>[];
       currentTokens.addAll(user.fcmTokens);
       currentTokens.remove(fcmToken);
       await updateUser(user.copyWith(fcmTokens: currentTokens));
@@ -254,9 +252,9 @@ class ChatController {
   void resetUnreadMessages(String groupId) async {
     checkUserId();
     try {
-      var groupDoc = await _groupCollection.doc(groupId).get();
+      final groupDoc = await _groupCollection.doc(groupId).get();
       if (!groupDoc.exists) return;
-      var group = Group.fromJson(groupDoc.data() ?? {});
+      final group = Group.fromJson(groupDoc.data() ?? {});
       if (group.lastMessage == null) return;
       if (group.lastMessage?.idFrom == _userId) return;
       await updateGroup(group.copyWith(unreadMessageCount: 0));
@@ -271,30 +269,30 @@ class ChatController {
       required String title}) async {
     checkUserId();
     try {
-      var notifificationHelper = NotificationHelper();
-      var body = "";
+      final notifificationHelper = NotificationHelper();
+      var body = '';
       switch (message.type) {
         case MessageType.text:
           body = message.content;
           break;
         case MessageType.image:
-          body = "Shared Image";
+          body = 'Shared Image';
           break;
         case MessageType.location:
-          body = "Shared Location";
+          body = 'Shared Location';
           break;
       }
-      var recepientDoc = await _userCollection
+      final recepientDoc = await _userCollection
           .doc(group.users.firstWhere((element) => _userId != element))
           .get();
-      var recepientUser = User.fromJson(recepientDoc.data() ?? {});
+      final recepientUser = User.fromJson(recepientDoc.data() ?? {});
       await notifificationHelper.sendPushNotification(
         title,
         recepientUser.fcmTokens,
         body,
         {
-          "id": "sitesurface_flutter_chat",
-          "data": jsonEncode(
+          'id': 'sitesurface_flutter_chat',
+          'data': jsonEncode(
             group.toJson(),
           ),
         },
@@ -313,9 +311,9 @@ class ChatController {
     checkUserId();
     try {
       if (_userId == null) return;
-      String currTime = await getCurrentTimestamp();
+      final currTime = await getCurrentTimestamp();
       if (message.content.trim().isEmpty) return;
-      var tempGroup = await getGroup(group.id);
+      final tempGroup = await getGroup(group.id);
       if (tempGroup != null) group = tempGroup;
       var unreadMessageCount = group.unreadMessageCount;
       unreadMessageCount += 1;
@@ -345,9 +343,9 @@ class ChatController {
   Future<void> setUserState(bool isActive) async {
     checkUserId();
     try {
-      String currTime = await getCurrentTimestamp();
-      var userDoc = await _userCollection.doc(_userId).get();
-      var user = User.fromJson(userDoc.data() ?? {});
+      final currTime = await getCurrentTimestamp();
+      final userDoc = await _userCollection.doc(_userId).get();
+      final user = User.fromJson(userDoc.data() ?? {});
       await updateUser(user.copyWith(lastSeen: currTime, isActive: isActive));
     } catch (e) {
       debugPrint(e.toString());
@@ -357,8 +355,8 @@ class ChatController {
   Future<Group?> getGroup(String groupId) async {
     checkUserId();
     try {
-      var groupDoc = await _groupCollection.doc(groupId).get();
-      var group = Group.fromJson(groupDoc.data() ?? {});
+      final groupDoc = await _groupCollection.doc(groupId).get();
+      final group = Group.fromJson(groupDoc.data() ?? {});
       return group;
     } catch (e) {
       return null;
@@ -370,21 +368,21 @@ class ChatController {
     try {
       await _userCollection
           .doc(_userId)
-          .set({"typingGroup": groupId}, SetOptions(merge: true));
+          .set({'typingGroup': groupId}, SetOptions(merge: true));
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
   void checkUserId() {
-    if (_userId == null) throw Exception("userId is not initialised");
+    if (_userId == null) throw Exception('userId is not initialised');
   }
 
   Future<String> getCurrentTimestamp() async {
     if (getCurrentTimeUserDefined == null) {
       return DateTime.now().millisecondsSinceEpoch.toString();
     } else {
-      var currentDate = await getCurrentTimeUserDefined!();
+      final currentDate = await getCurrentTimeUserDefined!();
       return currentDate.toUtc().millisecondsSinceEpoch.toString();
     }
   }

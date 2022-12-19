@@ -10,14 +10,14 @@ class Debouncer {
     required this.seconds,
   });
 
-  run(VoidCallback action) {
+  void run(VoidCallback action) {
     if (null != _timer) {
       _timer?.cancel();
     }
     _timer = Timer(Duration(seconds: seconds), action);
   }
 
-  dispose() {
+  void dispose() {
     _timer?.cancel();
   }
 }

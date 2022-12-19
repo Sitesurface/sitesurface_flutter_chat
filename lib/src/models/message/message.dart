@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
+import '../../enums/message_type.dart';
 
 part 'message.freezed.dart';
 part 'message.g.dart';

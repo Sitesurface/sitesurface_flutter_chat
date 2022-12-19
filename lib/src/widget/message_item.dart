@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:sitesurface_flutter_chat/src/enums/message_type.dart';
-import 'package:sitesurface_flutter_chat/src/utils/datetime_utils.dart';
-import 'package:sitesurface_flutter_chat/src/utils/theme/inherited_chat_theme.dart';
-
 import '../../sitesurface_flutter_chat.dart';
+import '../utils/datetime_utils.dart';
 import '../utils/locale/inherited_chat_locale.dart';
+import '../utils/theme/inherited_chat_theme.dart';
 import 'chat_bubble/chat_bubble.dart';
 
 class MessageItem extends StatelessWidget {
@@ -20,14 +18,13 @@ class MessageItem extends StatelessWidget {
   final void Function(String url)? openMap;
 
   const MessageItem(
-      {Key? key,
+      {super.key,
       required this.index,
       required this.message,
       required this.currUserId,
       required this.context,
       required this.listMessage,
-      this.openMap})
-      : super(key: key);
+      this.openMap});
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +32,9 @@ class MessageItem extends StatelessWidget {
       if (index == (listMessage.length - 1)) {
         return false;
       }
-      DateTime curr = DateTime.fromMillisecondsSinceEpoch(
+      final curr = DateTime.fromMillisecondsSinceEpoch(
           int.parse(listMessage[index].timestamp));
-      DateTime prev = DateTime.fromMillisecondsSinceEpoch(
+      final prev = DateTime.fromMillisecondsSinceEpoch(
           int.parse(listMessage[index + 1].timestamp));
       if (curr.year == prev.year &&
           curr.month == prev.month &&
@@ -62,7 +59,7 @@ class MessageItem extends StatelessWidget {
               alignment: Alignment.center,
               color: theme.dateSeparatorBackgroundColor,
               child: Text(() {
-                var separatorDate = DateTime.fromMillisecondsSinceEpoch(
+                final separatorDate = DateTime.fromMillisecondsSinceEpoch(
                     int.parse(message.timestamp));
                 return dateSeparatorFormat(separatorDate, context);
               }(),
@@ -110,17 +107,16 @@ class _TextMessageWidget extends StatelessWidget {
   final bool showNip;
   final bool isSender;
   const _TextMessageWidget({
-    Key? key,
     required this.message,
     required this.showNip,
     required this.isSender,
-  }) : super(key: key);
+  });
 
   final Message message;
 
   @override
   Widget build(BuildContext context) {
-    var theme = InheritedChatTheme.of(context).theme;
+    final theme = InheritedChatTheme.of(context).theme;
 
     return Column(
       crossAxisAlignment:
@@ -165,7 +161,7 @@ class _TextMessageWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        DateFormat("hh:mm aa").format(
+                        DateFormat('hh:mm aa').format(
                             DateTime.fromMillisecondsSinceEpoch(
                                 int.parse(message.timestamp))),
                         style: isSender
@@ -191,30 +187,29 @@ class _LocationWidget extends StatelessWidget {
   final bool showNip;
   final void Function(String url)? onTap;
   const _LocationWidget({
-    Key? key,
     required this.message,
     required this.isSender,
     required this.showNip,
     // ignore: unused_element
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var mapUri = Uri(
+    final width = MediaQuery.of(context).size.width;
+    final mapUri = Uri(
       scheme: 'https',
       host: 'maps.googleapis.com',
       path: 'maps/api/staticmap',
       queryParameters: {
-        "center": message.content,
-        "zoom": "18",
-        "size": "400x400",
-        "markers": "size:mid|color:0xFF7717|${message.content}",
-        "key": "AIzaSyBD-EvQTcV3m73xrrWbDjUiEubDeSIIX-o"
+        'center': message.content,
+        'zoom': '18',
+        'size': '400x400',
+        'markers': 'size:mid|color:0xFF7717|${message.content}',
+        'key': 'AIzaSyBD-EvQTcV3m73xrrWbDjUiEubDeSIIX-o'
       },
     );
-    var url = mapUri.toString();
+    final url = mapUri.toString();
     final theme = InheritedChatTheme.of(context).theme;
     final l10n = InheritedL10n.of(context).l10n;
     return Padding(
@@ -264,7 +259,7 @@ class _LocationWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            DateFormat("hh:mm aa").format(
+                            DateFormat('hh:mm aa').format(
                                 DateTime.fromMillisecondsSinceEpoch(
                                     int.parse(message.timestamp))),
                             style: isSender
@@ -286,8 +281,7 @@ class _LocationWidget extends StatelessWidget {
   }
 
   Future<void> openMap(String latlng) async {
-    String googleUrl =
-        'https://www.google.com/maps/search/?api=1&query=$latlng';
+    final googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latlng';
     if (onTap != null) {
       onTap!(googleUrl);
     }
@@ -303,7 +297,7 @@ class _ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     final theme = InheritedChatTheme.of(context).theme;
     return Padding(
       padding: !showNip
@@ -385,7 +379,7 @@ class _ImageWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    DateFormat("hh:mm aa").format(
+                    DateFormat('hh:mm aa').format(
                         DateTime.fromMillisecondsSinceEpoch(
                             int.parse(message.timestamp))),
                     style: isSender
@@ -403,7 +397,5 @@ class _ImageWidget extends StatelessWidget {
   }
 
   // check if text is link
-  bool isLink(String text) {
-    return text.contains("http");
-  }
+  bool isLink(String text) => text.contains('http');
 }

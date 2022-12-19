@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as ln;
-import 'package:sitesurface_flutter_chat/sitesurface_flutter_chat.dart';
-import 'package:sitesurface_flutter_chat/src/controllers/chat_controller.dart';
+import '../../sitesurface_flutter_chat.dart';
+import '../controllers/chat_controller.dart';
 
 import '../views/chat_screen.dart';
 
@@ -50,7 +50,7 @@ class ChatHandler extends StatefulWidget {
   final Future<DateTime> Function()? getCurrentTimeUserDefined;
 
   const ChatHandler(
-      {Key? key,
+      {super.key,
       required this.child,
       required this.chatDelegate,
       required this.userId,
@@ -59,8 +59,7 @@ class ChatHandler extends StatefulWidget {
       this.data,
       this.fcmServerKey,
       this.getCurrentTimeUserDefined,
-      this.notificationIconPath = '@mipmap/ic_launcher'})
-      : super(key: key);
+      this.notificationIconPath = '@mipmap/ic_launcher'});
 
   @override
   State createState() => ChatHandlerState();
@@ -90,15 +89,15 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    FlutterAppBadger.removeBadge();
+    await FlutterAppBadger.removeBadge();
     switch (state) {
       case AppLifecycleState.resumed:
-        _chatController.setUserState(true);
+        await _chatController.setUserState(true);
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
       case AppLifecycleState.paused:
-        _chatController.setUserState(false);
+        await _chatController.setUserState(false);
     }
   }
 
@@ -116,10 +115,10 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     child = widget.child;
     FirebaseMessaging.onMessage.listen((message) async {
-      var group = getGroupFromMessage(message);
+      final group = getGroupFromMessage(message);
       if (group == null) return;
       if (group.id == _chatController.activeChatScreen) return;
-      flutterLocalNotificationsPlugin.show(
+      await flutterLocalNotificationsPlugin.show(
           message.notification.hashCode,
           message.notification?.title ?? '',
           message.notification?.body ?? '',
@@ -137,30 +136,28 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
     //When app is in Active State
     FirebaseMessaging.onMessageOpenedApp.listen(
       (message) async {
-        var group = getGroupFromMessage(message);
+        final group = getGroupFromMessage(message);
         if (group == null) return;
         screenNav(group);
       },
     );
     //When app is in Killed State
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
-      var group = getGroupFromMessage(message);
+      final group = getGroupFromMessage(message);
       if (group == null) return;
       screenNav(group);
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return child;
-  }
+  Widget build(BuildContext context) => child;
 
   Group? getGroupFromMessage(RemoteMessage? message) {
     try {
       if (_chatController.userId == null) return null;
       if (message == null) return null;
-      if (message.data["id"] != "sitesurface_flutter_chat") return null;
-      var group = Group.fromJson(jsonDecode(message.data["data"]));
+      if (message.data['id'] != 'sitesurface_flutter_chat') return null;
+      final group = Group.fromJson(jsonDecode(message.data['data']));
       return group;
     } catch (e) {
       return null;
@@ -182,7 +179,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
   }
 
   Future initMain() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    final messaging = FirebaseMessaging.instance;
 
     await messaging.requestPermission(
       alert: true,
@@ -194,31 +191,30 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
       sound: true,
     );
 
-    var initializationSettingsAndroid =
+    final initializationSettingsAndroid =
         ln.AndroidInitializationSettings(widget.notificationIconPath);
 
-    ln.DarwinInitializationSettings initializationSettingsIOS =
-        ln.DarwinInitializationSettings(
-            requestAlertPermission: false,
-            requestBadgePermission: false,
-            requestSoundPermission: false,
-            onDidReceiveLocalNotification: (
-              int id,
-              String? title,
-              String? body,
-              String? payload,
-            ) async {
-              debugPrint(payload);
-            });
+    final initializationSettingsIOS = ln.DarwinInitializationSettings(
+        requestAlertPermission: false,
+        requestBadgePermission: false,
+        requestSoundPermission: false,
+        onDidReceiveLocalNotification: (
+          int id,
+          String? title,
+          String? body,
+          String? payload,
+        ) async {
+          debugPrint(payload);
+        });
 
-    var initializationSettings = ln.InitializationSettings(
+    final initializationSettings = ln.InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: (notificationResponse) async {
       if (notificationResponse.payload == null) return;
-      var message = jsonDecode(notificationResponse.payload!);
-      if (message["id"] != "sitesurface_flutter_chat") return;
-      var group = Group.fromJson(jsonDecode(message["data"]));
+      final message = jsonDecode(notificationResponse.payload!);
+      if (message['id'] != 'sitesurface_flutter_chat') return;
+      final group = Group.fromJson(jsonDecode(message['data']));
       screenNav(group);
     });
   }

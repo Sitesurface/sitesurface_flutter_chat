@@ -224,12 +224,10 @@ class _AttachIcon extends StatelessWidget {
   const _AttachIcon();
 
   @override
-  Widget build(BuildContext context) {
-    return Transform.rotate(
-        angle: 50 * 3.1415926535897932 / 180,
-        child: const Icon(
-          Icons.attachment,
-          color: Colors.white,
-        ));
-  }
+  Widget build(BuildContext context) => Transform.rotate(
+      angle: 50 * 3.1415926535897932 / 180,
+      child: const Icon(
+        Icons.attachment,
+        color: Colors.white,
+      ));
 }
