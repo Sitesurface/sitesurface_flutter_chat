@@ -57,7 +57,7 @@ With Sitesurface Flutter Chat Package you can integrate highly customizable chat
 
 `Dart >=2.18.2` and `Flutter >=1.17.0`
 
-To use this plugin, please visit the [Flutter Chat Usage documentation](https://blog.sitesurface.com/flutter/sitesurface-flutter-chat) or see the [example](https://github.com/Sitesurface/sitesurface_flutter_chat/tree/main/example)
+To use this plugin, please visit the [Flutter Chat Usage documentation](https://sitesurface.com/docs/sitesurface-flutter-chat/) or see the [example](https://github.com/Sitesurface/sitesurface_flutter_chat/tree/main/example)
 
 ## Issues and feedback
 

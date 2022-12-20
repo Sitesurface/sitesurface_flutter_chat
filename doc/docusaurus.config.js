@@ -8,8 +8,8 @@ const darkCodeTheme = require("prism-react-renderer/themes/vsDark");
 const config = {
   title: "Sitesurface Flutter Chat",
   tagline: "The #1 Chat Package for Custom Messaging Apps.",
-  url: "https://sitesurface.com/",
-  baseUrl: "/",
+  url: "https://sitesurface.com",
+  baseUrl: "/docs/sitesurface-flutter-chat/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.png",
