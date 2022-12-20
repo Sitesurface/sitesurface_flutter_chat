@@ -33,3 +33,4 @@ flutter:
 
 false_secrets:
  - lib/src/widget/message_item.dart
+ - example/
