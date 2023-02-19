@@ -10,3 +10,7 @@
 
 - Updated Packages
 - Added multiline in chat textfield
+
+## 0.0.3
+
+- Textfield expand issue fixed
