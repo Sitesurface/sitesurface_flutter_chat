@@ -5,3 +5,8 @@
 ## 0.0.2
 
 - Added example project and documentation
+
+## 0.0.3
+
+- Updated Packages
+- Added multiline in chat textfield
