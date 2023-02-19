@@ -46,6 +46,7 @@ class _ChatBottomWidgetState extends State<ChatBottomWidget> {
           children: [
             Flexible(
                 child: TextField(
+              maxLines: 5,
               controller: textEditingController,
               onChanged: (value) {
                 if (value.trim().isEmpty) {
