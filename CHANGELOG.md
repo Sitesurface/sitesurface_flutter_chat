@@ -11,6 +11,6 @@
 - Updated Packages
 - Added multiline in chat textfield
 
-## 0.0.3
+## 0.0.4
 
 - Textfield expand issue fixed
