@@ -170,6 +170,7 @@ class _ChatScreenState extends State<ChatScreen> {
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
     messageNotifier.value = [message, ...messageNotifier.value];
+    textEditingController.clear();
     await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     await _chatController.sendMessage(
@@ -177,7 +178,6 @@ class _ChatScreenState extends State<ChatScreen> {
         group: group,
         notificationTitle:
             widget.delegate.notificationTitle(group, currentUser!));
-    textEditingController.clear();
     await _chatController.updateTyping(null);
   }
 
