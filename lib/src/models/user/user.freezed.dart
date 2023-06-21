@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user.dart';
 
@@ -20,14 +20,31 @@ User _$UserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$User {
-  String? get createdAt => throw _privateConstructorUsedError;
+  /// Time when user is created
+  DateTime get createdAt => throw _privateConstructorUsedError;
+
+  /// active fcm tokens of user for sending notification
   List<String> get fcmTokens => throw _privateConstructorUsedError;
-  String? get lastSeen => throw _privateConstructorUsedError;
+
+  /// time when user was last active
+  DateTime get lastSeen => throw _privateConstructorUsedError;
+
+  /// unique id of user
   String get id => throw _privateConstructorUsedError;
+
+  /// bool for saving if user is currently active or not
   bool get isActive => throw _privateConstructorUsedError;
+
+  /// the current group  in which user is typing message
   String? get typingGroup => throw _privateConstructorUsedError;
+
+  /// name of user
   String? get name => throw _privateConstructorUsedError;
+
+  /// profile pic url of user
   String? get profilePic => throw _privateConstructorUsedError;
+
+  /// custom data of user which you want to save in db
   Map<String, dynamic>? get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,9 +58,9 @@ abstract class $UserCopyWith<$Res> {
       _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call(
-      {String? createdAt,
+      {DateTime createdAt,
       List<String> fcmTokens,
-      String? lastSeen,
+      DateTime lastSeen,
       String id,
       bool isActive,
       String? typingGroup,
@@ -65,9 +82,9 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createdAt = freezed,
+    Object? createdAt = null,
     Object? fcmTokens = null,
-    Object? lastSeen = freezed,
+    Object? lastSeen = null,
     Object? id = null,
     Object? isActive = null,
     Object? typingGroup = freezed,
@@ -76,18 +93,18 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? data = freezed,
   }) {
     return _then(_value.copyWith(
-      createdAt: freezed == createdAt
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime,
       fcmTokens: null == fcmTokens
           ? _value.fcmTokens
           : fcmTokens // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      lastSeen: freezed == lastSeen
+      lastSeen: null == lastSeen
           ? _value.lastSeen
           : lastSeen // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -123,9 +140,9 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String? createdAt,
+      {DateTime createdAt,
       List<String> fcmTokens,
-      String? lastSeen,
+      DateTime lastSeen,
       String id,
       bool isActive,
       String? typingGroup,
@@ -143,9 +160,9 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createdAt = freezed,
+    Object? createdAt = null,
     Object? fcmTokens = null,
-    Object? lastSeen = freezed,
+    Object? lastSeen = null,
     Object? id = null,
     Object? isActive = null,
     Object? typingGroup = freezed,
@@ -154,18 +171,18 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     Object? data = freezed,
   }) {
     return _then(_$_User(
-      createdAt: freezed == createdAt
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime,
       fcmTokens: null == fcmTokens
           ? _value._fcmTokens
           : fcmTokens // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      lastSeen: freezed == lastSeen
+      lastSeen: null == lastSeen
           ? _value.lastSeen
           : lastSeen // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -198,9 +215,9 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 @JsonSerializable()
 class _$_User implements _User {
   _$_User(
-      {this.createdAt,
+      {required this.createdAt,
       final List<String> fcmTokens = const [],
-      this.lastSeen,
+      required this.lastSeen,
       required this.id,
       this.isActive = false,
       this.typingGroup,
@@ -212,34 +229,56 @@ class _$_User implements _User {
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
+  /// Time when user is created
   @override
-  final String? createdAt;
+  final DateTime createdAt;
+
+  /// active fcm tokens of user for sending notification
   final List<String> _fcmTokens;
+
+  /// active fcm tokens of user for sending notification
   @override
   @JsonKey()
   List<String> get fcmTokens {
+    if (_fcmTokens is EqualUnmodifiableListView) return _fcmTokens;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_fcmTokens);
   }
 
+  /// time when user was last active
   @override
-  final String? lastSeen;
+  final DateTime lastSeen;
+
+  /// unique id of user
   @override
   final String id;
+
+  /// bool for saving if user is currently active or not
   @override
   @JsonKey()
   final bool isActive;
+
+  /// the current group  in which user is typing message
   @override
   final String? typingGroup;
+
+  /// name of user
   @override
   final String? name;
+
+  /// profile pic url of user
   @override
   final String? profilePic;
+
+  /// custom data of user which you want to save in db
   final Map<String, dynamic>? _data;
+
+  /// custom data of user which you want to save in db
   @override
   Map<String, dynamic>? get data {
     final value = _data;
     if (value == null) return null;
+    if (_data is EqualUnmodifiableMapView) return _data;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(value);
   }
@@ -301,9 +340,9 @@ class _$_User implements _User {
 
 abstract class _User implements User {
   factory _User(
-      {final String? createdAt,
+      {required final DateTime createdAt,
       final List<String> fcmTokens,
-      final String? lastSeen,
+      required final DateTime lastSeen,
       required final String id,
       final bool isActive,
       final String? typingGroup,
@@ -314,22 +353,40 @@ abstract class _User implements User {
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
   @override
-  String? get createdAt;
+
+  /// Time when user is created
+  DateTime get createdAt;
   @override
+
+  /// active fcm tokens of user for sending notification
   List<String> get fcmTokens;
   @override
-  String? get lastSeen;
+
+  /// time when user was last active
+  DateTime get lastSeen;
   @override
+
+  /// unique id of user
   String get id;
   @override
+
+  /// bool for saving if user is currently active or not
   bool get isActive;
   @override
+
+  /// the current group  in which user is typing message
   String? get typingGroup;
   @override
+
+  /// name of user
   String? get name;
   @override
+
+  /// profile pic url of user
   String? get profilePic;
   @override
+
+  /// custom data of user which you want to save in db
   Map<String, dynamic>? get data;
   @override
   @JsonKey(ignore: true)

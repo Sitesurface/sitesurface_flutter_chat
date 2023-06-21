@@ -9,12 +9,11 @@ part 'latlng.g.dart';
 class SfcLatLng with _$SfcLatLng {
   factory SfcLatLng(
       {
-
       /// latitude of user
-      required final double latitude,
+      required double latitude,
 
       /// longitude of user
-      required final double longitude}) = _SfcLatLng;
+      required double longitude}) = _SfcLatLng;
 
   factory SfcLatLng.fromJson(Map<String, dynamic> json) =>
       _$SfcLatLngFromJson(json);

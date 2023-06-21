@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'latlng.dart';
 
@@ -20,7 +20,10 @@ SfcLatLng _$SfcLatLngFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SfcLatLng {
+  /// latitude of user
   double get latitude => throw _privateConstructorUsedError;
+
+  /// longitude of user
   double get longitude => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -111,8 +114,11 @@ class _$_SfcLatLng implements _SfcLatLng {
   factory _$_SfcLatLng.fromJson(Map<String, dynamic> json) =>
       _$$_SfcLatLngFromJson(json);
 
+  /// latitude of user
   @override
   final double latitude;
+
+  /// longitude of user
   @override
   final double longitude;
 
@@ -159,8 +165,12 @@ abstract class _SfcLatLng implements SfcLatLng {
       _$_SfcLatLng.fromJson;
 
   @override
+
+  /// latitude of user
   double get latitude;
   @override
+
+  /// longitude of user
   double get longitude;
   @override
   @JsonKey(ignore: true)

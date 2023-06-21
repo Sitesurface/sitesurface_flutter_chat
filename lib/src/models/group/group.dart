@@ -10,21 +10,20 @@ part 'group.g.dart';
 class Group with _$Group {
   factory Group(
       {
-
       /// unique id of the group
-      required final String id,
+      required String id,
 
       /// last message which is sent by any of the users in group
-      final Message? lastMessage,
+      Message? lastMessage,
 
       /// custom data which you want to save in the group
-      final Map<String, dynamic>? data,
+      Map<String, dynamic>? data,
 
       /// list of users in the group
-      required final List<String> users,
+      @Default([]) List<String> users,
 
       /// timetamp when group is created or when new message is sent
-      final String? timestamp,
+      required DateTime timestamp,
 
       /// number of new messages which are not read by recepient user
       @Default(0) final int unreadMessageCount}) = _Group;

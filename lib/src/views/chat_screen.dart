@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../sitesurface_flutter_chat.dart';
 import '../controllers/chat_controller.dart';
@@ -24,10 +25,6 @@ class _ChatScreenState extends State<ChatScreen> {
   late Group group;
   User? user;
   final ScrollController _scrollController = ScrollController();
-  QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument;
-  final ValueNotifier<List<Message>> messageNotifier =
-      ValueNotifier<List<Message>>([]);
-  late final StreamSubscription _messageSubscription;
   final ValueNotifier<bool> showGoToBottom = ValueNotifier<bool>(false);
   final textEditingController = TextEditingController();
   final debouncer = Debouncer(seconds: 3);
@@ -38,28 +35,16 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     group = widget.delegate.group!;
     _chatController.activeChatScreen = group.id;
-    currentUser = User(id: _chatController.userId ?? '');
+    currentUser = User(
+        id: _chatController.userId ?? '',
+        createdAt: DateTime.now(),
+        lastSeen: DateTime.now());
     _chatController.currentUser().then((value) {
       currentUser = value;
     });
-    getMessages();
+    _chatController.resetUnreadMessages(group.id);
     _addListeners();
     super.initState();
-  }
-
-  void getMessages() async {
-    final data =
-        await _chatController.getInitialMessages(group.id, lastDocument);
-    if (data.docs.isNotEmpty) {
-      lastDocument = data.docs.last;
-      final tempMessageList = <Message>[];
-      for (var messageSnapshot in data.docs) {
-        tempMessageList.add(Message.fromJson(messageSnapshot.data()));
-      }
-      // TODO : Check if this assignment is expensive and fix it if it is
-      messageNotifier.value =
-          {...messageNotifier.value, ...tempMessageList}.toList();
-    }
   }
 
   @override
@@ -102,6 +87,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       .chatAppbarBuilder(context, user!, isTyping, group);
                 },
               ),
+              FirestoreListView(
+                  query: _chatController.getInitialMessages(group.id),
+                  itemBuilder: (context, snapshot) {}),
               Expanded(
                 child: ValueListenableBuilder<List<Message>>(
                   valueListenable: messageNotifier,
@@ -169,7 +157,6 @@ class _ChatScreenState extends State<ChatScreen> {
         idFrom: _chatController.userId ?? '',
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
-    messageNotifier.value = [message, ...messageNotifier.value];
     textEditingController.clear();
     await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -195,7 +182,6 @@ class _ChatScreenState extends State<ChatScreen> {
         idFrom: _chatController.userId ?? '',
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
-    messageNotifier.value = [message, ...messageNotifier.value];
     await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     final url = await widget.delegate.uploadImage(image);
@@ -221,7 +207,6 @@ class _ChatScreenState extends State<ChatScreen> {
         idFrom: _chatController.userId ?? '',
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
-    messageNotifier.value = [message, ...messageNotifier.value];
     await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     final url = await widget.delegate.uploadImage(image);
@@ -248,7 +233,6 @@ class _ChatScreenState extends State<ChatScreen> {
         idFrom: _chatController.userId ?? '',
         idTo: _chatController.getRecepientFromGroup(group),
         timestamp: currTime);
-    messageNotifier.value = [message, ...messageNotifier.value];
     await _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     await _chatController.sendMessage(
@@ -261,9 +245,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _chatController.activeChatScreen = null;
-    _messageSubscription.cancel();
     _scrollController.dispose();
-    messageNotifier.dispose();
     textEditingController.dispose();
     debouncer.dispose();
     _chatController.updateTyping(null);
@@ -271,30 +253,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _addListeners() {
-    _messageSubscription =
-        _chatController.getNewMessages(group.id).listen((data) {
-      try {
-        _chatController.resetUnreadMessages(group.id);
-        final newMessage = Message.fromJson(data.docs.first.data());
-        if (newMessage.idFrom == _chatController.userId) return;
-        if (messageNotifier.value.contains(newMessage)) return;
-        // TODO Check if this assignment is expensive and fix it if it is
-        messageNotifier.value =
-            <Message>{newMessage, ...messageNotifier.value}.toList();
-      } catch (e) {
-        debugPrint(e.toString());
-      }
-    });
     _scrollController.addListener(() {
       final height = MediaQuery.of(context).size.height;
       if (_scrollController.offset >= height) {
         showGoToBottom.value = true;
       } else {
         showGoToBottom.value = false;
-      }
-      if (_scrollController.position.maxScrollExtent ==
-          _scrollController.offset) {
-        getMessages();
       }
     });
     textEditingController.addListener(() {

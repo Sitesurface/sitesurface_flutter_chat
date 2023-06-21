@@ -10,21 +10,20 @@ part 'message.g.dart';
 class Message with _$Message {
   factory Message(
       {
-
       /// content of sent message
       /// text in case of [MessageType.text]
       /// image url in case of [MessageType.image]
       /// lat lng in case of [MessageType.location]
-      required final String content,
+      required String content,
 
       /// user which sends this message
-      required final String idFrom,
+      required String idFrom,
 
       /// user who receives this message
-      required final String idTo,
+      required String idTo,
 
       /// time when this message is sent
-      required final String timestamp,
+      required DateTime timestamp,
 
       /// type of the message
       @Default(MessageType.text) final MessageType type}) = _Message;

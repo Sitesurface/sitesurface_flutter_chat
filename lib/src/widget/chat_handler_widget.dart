@@ -42,13 +42,6 @@ class ChatHandler extends StatefulWidget {
 
   final String notificationIconPath;
 
-  /// You can pass your own custom function to get current time of user. This object of [DateTime] is used internally
-  /// by the package to save timestamps for many documents which is used while querying.
-  /// By default it is retrieved using [DateTime.now().millisecondsSinceEpoch] .
-  /// But it is advised passing your own function which uses your own custom server to get time as if user changes time
-  /// on his device it can mess up the chats.
-  final Future<DateTime> Function()? getCurrentTimeUserDefined;
-
   const ChatHandler(
       {super.key,
       required this.child,
@@ -58,7 +51,6 @@ class ChatHandler extends StatefulWidget {
       this.profilePic,
       this.data,
       this.fcmServerKey,
-      this.getCurrentTimeUserDefined,
       this.notificationIconPath = '@mipmap/ic_launcher'});
 
   @override
@@ -105,12 +97,12 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _chatController.init(
-        fcmServerKey: widget.fcmServerKey,
-        userId: widget.userId,
-        data: widget.data,
-        name: widget.name,
-        profilePic: widget.profilePic,
-        getCurrentTimeUserDefined: widget.getCurrentTimeUserDefined);
+      fcmServerKey: widget.fcmServerKey,
+      userId: widget.userId,
+      data: widget.data,
+      name: widget.name,
+      profilePic: widget.profilePic,
+    );
     initMain();
     WidgetsBinding.instance.addObserver(this);
     child = widget.child;

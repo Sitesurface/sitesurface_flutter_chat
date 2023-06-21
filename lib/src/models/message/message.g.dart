@@ -10,7 +10,7 @@ _$_Message _$$_MessageFromJson(Map<String, dynamic> json) => _$_Message(
       content: json['content'] as String,
       idFrom: json['idFrom'] as String,
       idTo: json['idTo'] as String,
-      timestamp: json['timestamp'] as String,
+      timestamp: DateTime.parse(json['timestamp'] as String),
       type: $enumDecodeNullable(_$MessageTypeEnumMap, json['type']) ??
           MessageType.text,
     );
@@ -20,7 +20,7 @@ Map<String, dynamic> _$$_MessageToJson(_$_Message instance) =>
       'content': instance.content,
       'idFrom': instance.idFrom,
       'idTo': instance.idTo,
-      'timestamp': instance.timestamp,
+      'timestamp': instance.timestamp.toIso8601String(),
       'type': _$MessageTypeEnumMap[instance.type]!,
     };
 

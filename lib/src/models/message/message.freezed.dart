@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'message.dart';
 
@@ -20,10 +20,22 @@ Message _$MessageFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Message {
+  /// content of sent message
+  /// text in case of [MessageType.text]
+  /// image url in case of [MessageType.image]
+  /// lat lng in case of [MessageType.location]
   String get content => throw _privateConstructorUsedError;
+
+  /// user which sends this message
   String get idFrom => throw _privateConstructorUsedError;
+
+  /// user who receives this message
   String get idTo => throw _privateConstructorUsedError;
-  String get timestamp => throw _privateConstructorUsedError;
+
+  /// time when this message is sent
+  DateTime get timestamp => throw _privateConstructorUsedError;
+
+  /// type of the message
   MessageType get type => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +52,7 @@ abstract class $MessageCopyWith<$Res> {
       {String content,
       String idFrom,
       String idTo,
-      String timestamp,
+      DateTime timestamp,
       MessageType type});
 }
 
@@ -79,7 +91,7 @@ class _$MessageCopyWithImpl<$Res, $Val extends Message>
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
-              as String,
+              as DateTime,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -99,7 +111,7 @@ abstract class _$$_MessageCopyWith<$Res> implements $MessageCopyWith<$Res> {
       {String content,
       String idFrom,
       String idTo,
-      String timestamp,
+      DateTime timestamp,
       MessageType type});
 }
 
@@ -135,7 +147,7 @@ class __$$_MessageCopyWithImpl<$Res>
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
-              as String,
+              as DateTime,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -157,14 +169,26 @@ class _$_Message implements _Message {
   factory _$_Message.fromJson(Map<String, dynamic> json) =>
       _$$_MessageFromJson(json);
 
+  /// content of sent message
+  /// text in case of [MessageType.text]
+  /// image url in case of [MessageType.image]
+  /// lat lng in case of [MessageType.location]
   @override
   final String content;
+
+  /// user which sends this message
   @override
   final String idFrom;
+
+  /// user who receives this message
   @override
   final String idTo;
+
+  /// time when this message is sent
   @override
-  final String timestamp;
+  final DateTime timestamp;
+
+  /// type of the message
   @override
   @JsonKey()
   final MessageType type;
@@ -211,20 +235,33 @@ abstract class _Message implements Message {
       {required final String content,
       required final String idFrom,
       required final String idTo,
-      required final String timestamp,
+      required final DateTime timestamp,
       final MessageType type}) = _$_Message;
 
   factory _Message.fromJson(Map<String, dynamic> json) = _$_Message.fromJson;
 
   @override
+
+  /// content of sent message
+  /// text in case of [MessageType.text]
+  /// image url in case of [MessageType.image]
+  /// lat lng in case of [MessageType.location]
   String get content;
   @override
+
+  /// user which sends this message
   String get idFrom;
   @override
+
+  /// user who receives this message
   String get idTo;
   @override
-  String get timestamp;
+
+  /// time when this message is sent
+  DateTime get timestamp;
   @override
+
+  /// type of the message
   MessageType get type;
   @override
   @JsonKey(ignore: true)

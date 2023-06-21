@@ -5,17 +5,18 @@ homepage: https://sitesurface.com
 repository: https://github.com/Sitesurface/sitesurface_flutter_chat
 
 environment:
-  sdk: '>=2.18.2 <3.0.0'
+  sdk: '>=3.0.2 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   cloud_firestore: ^4.1.0
   firebase_messaging: ^14.1.2
   firebase_storage: ^11.0.6
+  firebase_ui_firestore: ^1.5.3
   flutter:
     sdk: flutter
   flutter_app_badger: ^1.5.0
-  flutter_local_notifications: ^13.0.0
+  flutter_local_notifications: ^14.1.1
   freezed_annotation: ^2.2.0
   http: ^0.13.5
   intl: ^0.18.0

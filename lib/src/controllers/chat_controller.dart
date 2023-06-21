@@ -58,7 +58,6 @@ class ChatController {
         name: name,
         profilePic: profilePic,
         data: data,
-        lastSeen: DateTime.now().microsecondsSinceEpoch.toString(),
         fcmTokens: currentTokens,
         isActive: true,
       );
@@ -197,20 +196,14 @@ class ChatController {
         .snapshots();
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getInitialMessages(String groupId,
-      QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument) {
+  Query<Map<String, dynamic>> getInitialMessages(String groupId) {
     checkUserId();
     resetUnreadMessages(groupId);
     var query = _messageCollection
         .doc(groupId)
         .collection(groupId)
-        .orderBy('timestamp', descending: true)
-        .limit(20);
-
-    if (lastDocument != null) {
-      query = query.startAfterDocument(lastDocument);
-    }
-    return query.get();
+        .orderBy('timestamp', descending: true);
+    return query;
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getUnreadChatsCount() {

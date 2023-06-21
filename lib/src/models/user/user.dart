@@ -11,33 +11,32 @@ part 'user.g.dart';
 class User with _$User {
   factory User(
       {
-
       /// Time when user is created
-      final String? createdAt,
+      required DateTime createdAt,
 
       /// active fcm tokens of user for sending notification
       @Default([]) final List<String> fcmTokens,
 
       /// time when user was last active
-      final String? lastSeen,
+      required DateTime lastSeen,
 
       /// unique id of user
-      required final String id,
+      required String id,
 
       /// bool for saving if user is currently active or not
-      @Default(false) final bool isActive,
+      @Default(false) bool isActive,
 
       /// the current group  in which user is typing message
-      final String? typingGroup,
+      String? typingGroup,
 
       /// name of user
-      final String? name,
+      String? name,
 
       /// profile pic url of user
-      final String? profilePic,
+      String? profilePic,
 
       /// custom data of user which you want to save in db
-      final Map<String, dynamic>? data}) = _User;
+      Map<String, dynamic>? data}) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }

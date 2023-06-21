@@ -12,8 +12,10 @@ _$_Group _$$_GroupFromJson(Map<String, dynamic> json) => _$_Group(
           ? null
           : Message.fromJson(json['lastMessage'] as Map<String, dynamic>),
       data: json['data'] as Map<String, dynamic>?,
-      users: (json['users'] as List<dynamic>).map((e) => e as String).toList(),
-      timestamp: json['timestamp'] as String?,
+      users:
+          (json['users'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
+      timestamp: DateTime.parse(json['timestamp'] as String),
       unreadMessageCount: json['unreadMessageCount'] as int? ?? 0,
     );
 
@@ -22,6 +24,6 @@ Map<String, dynamic> _$$_GroupToJson(_$_Group instance) => <String, dynamic>{
       'lastMessage': instance.lastMessage?.toJson(),
       'data': instance.data,
       'users': instance.users,
-      'timestamp': instance.timestamp,
+      'timestamp': instance.timestamp.toIso8601String(),
       'unreadMessageCount': instance.unreadMessageCount,
     };
