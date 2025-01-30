@@ -14,3 +14,7 @@
 ## 0.0.4
 
 - Textfield expand issue fixed
+
+## 1.0.0
+
+- Packages updated
