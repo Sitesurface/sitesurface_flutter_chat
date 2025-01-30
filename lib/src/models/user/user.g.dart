@@ -6,7 +6,7 @@ part of 'user.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
+_$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       createdAt: json['createdAt'] as String?,
       fcmTokens: (json['fcmTokens'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -21,7 +21,8 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       data: json['data'] as Map<String, dynamic>?,
     );
 
-Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
+Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
+    <String, dynamic>{
       'createdAt': instance.createdAt,
       'fcmTokens': instance.fcmTokens,
       'lastSeen': instance.lastSeen,

@@ -1,24 +1,25 @@
 name: sitesurface_flutter_chat
 description: Integrate full-blown chat to your existing application with few lines of code.
-version: 0.0.4
+version: 1.0.0
 homepage: https://sitesurface.com
 repository: https://github.com/Sitesurface/sitesurface_flutter_chat
 
 environment:
-  sdk: '>=2.18.2 <3.0.0'
+  sdk: ^3.6.0
   flutter: ">=1.17.0"
 
 dependencies:
-  cloud_firestore: ^4.1.0
-  firebase_messaging: ^14.1.2
-  firebase_storage: ^11.0.6
   flutter:
     sdk: flutter
+  cloud_firestore: ^5.6.2
+  firebase_core: ^3.10.1
+  firebase_messaging: ^15.2.1
+  firebase_storage: ^12.4.1
   flutter_app_badger: ^1.5.0
-  flutter_local_notifications: ^13.0.0
+  flutter_local_notifications: ^18.0.1
   freezed_annotation: ^2.2.0
-  http: ^0.13.5
-  intl: ^0.18.0
+  http: ^1.3.0
+  intl: ^0.20.2
   json_annotation: ^4.7.0
 
 dev_dependencies:
@@ -26,10 +27,9 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.3.2
   json_serializable: ^6.5.4
-  lints: ^2.0.1
-  flutter_lints: ^2.0.0
+  lints: ^5.1.1
+  flutter_lints: ^5.0.0
   freezed: ^2.2.0
-flutter:
 
 false_secrets:
  - lib/src/widget/message_item.dart

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user.dart';
 
@@ -12,7 +12,7 @@ part of 'user.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 User _$UserFromJson(Map<String, dynamic> json) {
   return _User.fromJson(json);
@@ -20,18 +20,39 @@ User _$UserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$User {
+  /// Time when user is created
   String? get createdAt => throw _privateConstructorUsedError;
+
+  /// active fcm tokens of user for sending notification
   List<String> get fcmTokens => throw _privateConstructorUsedError;
+
+  /// time when user was last active
   String? get lastSeen => throw _privateConstructorUsedError;
+
+  /// unique id of user
   String get id => throw _privateConstructorUsedError;
+
+  /// bool for saving if user is currently active or not
   bool get isActive => throw _privateConstructorUsedError;
+
+  /// the current group  in which user is typing message
   String? get typingGroup => throw _privateConstructorUsedError;
+
+  /// name of user
   String? get name => throw _privateConstructorUsedError;
+
+  /// profile pic url of user
   String? get profilePic => throw _privateConstructorUsedError;
+
+  /// custom data of user which you want to save in db
   Map<String, dynamic>? get data => throw _privateConstructorUsedError;
 
+  /// Serializes this User to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -62,6 +83,8 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -117,9 +140,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
 }
 
 /// @nodoc
-abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
-  factory _$$_UserCopyWith(_$_User value, $Res Function(_$_User) then) =
-      __$$_UserCopyWithImpl<$Res>;
+abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
+  factory _$$UserImplCopyWith(
+          _$UserImpl value, $Res Function(_$UserImpl) then) =
+      __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -135,11 +159,14 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
-    implements _$$_UserCopyWith<$Res> {
-  __$$_UserCopyWithImpl(_$_User _value, $Res Function(_$_User) _then)
+class __$$UserImplCopyWithImpl<$Res>
+    extends _$UserCopyWithImpl<$Res, _$UserImpl>
+    implements _$$UserImplCopyWith<$Res> {
+  __$$UserImplCopyWithImpl(_$UserImpl _value, $Res Function(_$UserImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -153,7 +180,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     Object? profilePic = freezed,
     Object? data = freezed,
   }) {
-    return _then(_$_User(
+    return _then(_$UserImpl(
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -196,8 +223,8 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 
 /// @nodoc
 @JsonSerializable()
-class _$_User implements _User {
-  _$_User(
+class _$UserImpl implements _User {
+  _$UserImpl(
       {this.createdAt,
       final List<String> fcmTokens = const [],
       this.lastSeen,
@@ -210,36 +237,59 @@ class _$_User implements _User {
       : _fcmTokens = fcmTokens,
         _data = data;
 
-  factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
+  factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserImplFromJson(json);
 
+  /// Time when user is created
   @override
   final String? createdAt;
+
+  /// active fcm tokens of user for sending notification
   final List<String> _fcmTokens;
+
+  /// active fcm tokens of user for sending notification
   @override
   @JsonKey()
   List<String> get fcmTokens {
+    if (_fcmTokens is EqualUnmodifiableListView) return _fcmTokens;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_fcmTokens);
   }
 
+  /// time when user was last active
   @override
   final String? lastSeen;
+
+  /// unique id of user
   @override
   final String id;
+
+  /// bool for saving if user is currently active or not
   @override
   @JsonKey()
   final bool isActive;
+
+  /// the current group  in which user is typing message
   @override
   final String? typingGroup;
+
+  /// name of user
   @override
   final String? name;
+
+  /// profile pic url of user
   @override
   final String? profilePic;
+
+  /// custom data of user which you want to save in db
   final Map<String, dynamic>? _data;
+
+  /// custom data of user which you want to save in db
   @override
   Map<String, dynamic>? get data {
     final value = _data;
     if (value == null) return null;
+    if (_data is EqualUnmodifiableMapView) return _data;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(value);
   }
@@ -250,10 +300,10 @@ class _$_User implements _User {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_User &&
+            other is _$UserImpl &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             const DeepCollectionEquality()
@@ -271,7 +321,7 @@ class _$_User implements _User {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -285,15 +335,17 @@ class _$_User implements _User {
       profilePic,
       const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UserCopyWith<_$_User> get copyWith =>
-      __$$_UserCopyWithImpl<_$_User>(this, _$identity);
+  _$$UserImplCopyWith<_$UserImpl> get copyWith =>
+      __$$UserImplCopyWithImpl<_$UserImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UserToJson(
+    return _$$UserImplToJson(
       this,
     );
   }
@@ -309,29 +361,50 @@ abstract class _User implements User {
       final String? typingGroup,
       final String? name,
       final String? profilePic,
-      final Map<String, dynamic>? data}) = _$_User;
+      final Map<String, dynamic>? data}) = _$UserImpl;
 
-  factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
+  factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
+  /// Time when user is created
   @override
   String? get createdAt;
+
+  /// active fcm tokens of user for sending notification
   @override
   List<String> get fcmTokens;
+
+  /// time when user was last active
   @override
   String? get lastSeen;
+
+  /// unique id of user
   @override
   String get id;
+
+  /// bool for saving if user is currently active or not
   @override
   bool get isActive;
+
+  /// the current group  in which user is typing message
   @override
   String? get typingGroup;
+
+  /// name of user
   @override
   String? get name;
+
+  /// profile pic url of user
   @override
   String? get profilePic;
+
+  /// custom data of user which you want to save in db
   @override
   Map<String, dynamic>? get data;
+
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UserImplCopyWith<_$UserImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -98,6 +98,7 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
       case AppLifecycleState.detached:
       case AppLifecycleState.paused:
         await _chatController.setUserState(false);
+      case AppLifecycleState.hidden:
     }
   }
 
@@ -195,17 +196,10 @@ class ChatHandlerState extends State<ChatHandler> with WidgetsBindingObserver {
         ln.AndroidInitializationSettings(widget.notificationIconPath);
 
     final initializationSettingsIOS = ln.DarwinInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false,
-        onDidReceiveLocalNotification: (
-          int id,
-          String? title,
-          String? body,
-          String? payload,
-        ) async {
-          debugPrint(payload);
-        });
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
 
     final initializationSettings = ln.InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);

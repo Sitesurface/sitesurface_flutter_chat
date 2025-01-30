@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'latlng.dart';
 
@@ -12,7 +12,7 @@ part of 'latlng.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 SfcLatLng _$SfcLatLngFromJson(Map<String, dynamic> json) {
   return _SfcLatLng.fromJson(json);
@@ -20,11 +20,18 @@ SfcLatLng _$SfcLatLngFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SfcLatLng {
+  /// latitude of user
   double get latitude => throw _privateConstructorUsedError;
+
+  /// longitude of user
   double get longitude => throw _privateConstructorUsedError;
 
+  /// Serializes this SfcLatLng to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SfcLatLng
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SfcLatLngCopyWith<SfcLatLng> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,6 +54,8 @@ class _$SfcLatLngCopyWithImpl<$Res, $Val extends SfcLatLng>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SfcLatLng
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -67,30 +76,33 @@ class _$SfcLatLngCopyWithImpl<$Res, $Val extends SfcLatLng>
 }
 
 /// @nodoc
-abstract class _$$_SfcLatLngCopyWith<$Res> implements $SfcLatLngCopyWith<$Res> {
-  factory _$$_SfcLatLngCopyWith(
-          _$_SfcLatLng value, $Res Function(_$_SfcLatLng) then) =
-      __$$_SfcLatLngCopyWithImpl<$Res>;
+abstract class _$$SfcLatLngImplCopyWith<$Res>
+    implements $SfcLatLngCopyWith<$Res> {
+  factory _$$SfcLatLngImplCopyWith(
+          _$SfcLatLngImpl value, $Res Function(_$SfcLatLngImpl) then) =
+      __$$SfcLatLngImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double latitude, double longitude});
 }
 
 /// @nodoc
-class __$$_SfcLatLngCopyWithImpl<$Res>
-    extends _$SfcLatLngCopyWithImpl<$Res, _$_SfcLatLng>
-    implements _$$_SfcLatLngCopyWith<$Res> {
-  __$$_SfcLatLngCopyWithImpl(
-      _$_SfcLatLng _value, $Res Function(_$_SfcLatLng) _then)
+class __$$SfcLatLngImplCopyWithImpl<$Res>
+    extends _$SfcLatLngCopyWithImpl<$Res, _$SfcLatLngImpl>
+    implements _$$SfcLatLngImplCopyWith<$Res> {
+  __$$SfcLatLngImplCopyWithImpl(
+      _$SfcLatLngImpl _value, $Res Function(_$SfcLatLngImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SfcLatLng
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? latitude = null,
     Object? longitude = null,
   }) {
-    return _then(_$_SfcLatLng(
+    return _then(_$SfcLatLngImpl(
       latitude: null == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -105,14 +117,17 @@ class __$$_SfcLatLngCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_SfcLatLng implements _SfcLatLng {
-  _$_SfcLatLng({required this.latitude, required this.longitude});
+class _$SfcLatLngImpl implements _SfcLatLng {
+  _$SfcLatLngImpl({required this.latitude, required this.longitude});
 
-  factory _$_SfcLatLng.fromJson(Map<String, dynamic> json) =>
-      _$$_SfcLatLngFromJson(json);
+  factory _$SfcLatLngImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SfcLatLngImplFromJson(json);
 
+  /// latitude of user
   @override
   final double latitude;
+
+  /// longitude of user
   @override
   final double longitude;
 
@@ -122,29 +137,31 @@ class _$_SfcLatLng implements _SfcLatLng {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SfcLatLng &&
+            other is _$SfcLatLngImpl &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, latitude, longitude);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SfcLatLng
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SfcLatLngCopyWith<_$_SfcLatLng> get copyWith =>
-      __$$_SfcLatLngCopyWithImpl<_$_SfcLatLng>(this, _$identity);
+  _$$SfcLatLngImplCopyWith<_$SfcLatLngImpl> get copyWith =>
+      __$$SfcLatLngImplCopyWithImpl<_$SfcLatLngImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SfcLatLngToJson(
+    return _$$SfcLatLngImplToJson(
       this,
     );
   }
@@ -153,17 +170,23 @@ class _$_SfcLatLng implements _SfcLatLng {
 abstract class _SfcLatLng implements SfcLatLng {
   factory _SfcLatLng(
       {required final double latitude,
-      required final double longitude}) = _$_SfcLatLng;
+      required final double longitude}) = _$SfcLatLngImpl;
 
   factory _SfcLatLng.fromJson(Map<String, dynamic> json) =
-      _$_SfcLatLng.fromJson;
+      _$SfcLatLngImpl.fromJson;
 
+  /// latitude of user
   @override
   double get latitude;
+
+  /// longitude of user
   @override
   double get longitude;
+
+  /// Create a copy of SfcLatLng
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_SfcLatLngCopyWith<_$_SfcLatLng> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SfcLatLngImplCopyWith<_$SfcLatLngImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
